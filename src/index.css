@@ -1,6 +1,20 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Prosto+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Prosto+One&family=Raleway:ital,wght@0,500;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .subcategoryes-grid {
+    display: grid;
+    gap: 25px;
+    max-height: 70px;
+    grid-template-columns: repeat(auto-fit, minmax(max-content, 200px));
+  }
+}
+
 
 *::-webkit-scrollbar {
     width: 10px;
@@ -15,3 +29,4 @@
     border-radius: 20px;
     border: 1px solid rgb(36, 99, 139);
   }
+
