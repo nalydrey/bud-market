@@ -18,14 +18,8 @@ export const Layout = () => {
                 totalPrice={431}
             />
             <SubHeader/>
-            <main className="text-center text-5xl container mx-auto bg-gray-900 grow">
+            <main className="grow">
                 <Outlet/>
-                Layout
-                <BasketIcon/>
-                <FavoriteIcon/>
-                <UserIcon/>
-                <StatisticIcon/>
-                <DoneIcon/>
             </main>
             <Footer/>
         </>

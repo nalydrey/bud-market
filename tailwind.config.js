@@ -23,6 +23,9 @@ export default {
                 raleway: ["Raleway", "sans-serif"],
                 sans: ["Raleway", ...fontFamily.sans],
             },
+            backgroundImage: {
+                deValt: "url('./src/assets/Rectangle 1328.jpg')",
+            },
         },
     },
     plugins: [],
