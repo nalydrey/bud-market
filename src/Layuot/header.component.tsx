@@ -65,7 +65,7 @@ export const Header = ({
                        onClick={onClickUser}
                     />
                     <UserButton
-                       icon={<BasketIcon/>}
+                       icon={<BasketIcon className="w-8 stroke-white"/>}
                        countValue={basketCounter}
                        onClick={onClickBasket}
                     />

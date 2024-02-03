@@ -24,7 +24,7 @@ export const CategoryList = ({
     
     return (
         <div 
-            className="absolute bg-gray-white top-full left-0 text-black flex "
+            className="absolute z-10 bg-gray-white top-full left-0 text-black flex "
             onClick={(e)=>{e.stopPropagation()}}
             onMouseLeave={onMouseLeave}
         >

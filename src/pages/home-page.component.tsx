@@ -1,39 +1,13 @@
 import { PresentCard } from "../components/PresentCard.component"
-import deValt from '../assets/devalt.jpg'
-import treschetka from '../assets/treschetka.jpg'
-import kraska from '../assets/kraska.jpg'
-import sverla from '../assets/sverla.jpg'
+import { presentData } from "../data/presentSectionData"
+import { CategoryPreview } from "../components/Category-preview.component"
+import { products } from "../data/test-product"
+import { Brand } from "../components/Brand.component"
+import { brands } from "../data/brands"
+import { RoundIconButton } from "../components/RoundIconButton.component"
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline"
 
-interface IPresentData {
-    title: string
-    isMain: boolean
-    imgUrl: string
-}
-
-const presentData: IPresentData[] = [
-    {
-        title: 'DeWALT - Інструмент зі справжнім характером',
-        isMain: true,
-        imgUrl: deValt
-    },
-    {
-        title: 'Акції',
-        isMain: false,
-        imgUrl: treschetka
-    },
-    {
-        title: 'Нове надходження',
-        isMain: false,
-        imgUrl: kraska
-    },
-    {
-        title: 'Акції на сверла',
-        isMain: false,
-        imgUrl: sverla
-    },
-]
-
-const gridStiles = [
+const gridStyles = [
     "col-span-2 row-span-2",
     "row-span-2"
 ]
@@ -49,32 +23,60 @@ export const HomePage = () => {
                                 title={data.title}
                                 isMain={data.isMain}
                                 src={data.imgUrl}
-                                className={gridStiles[i]}
+                                className={gridStyles[i]}
                             />
                         ))
                     }
-                    {/* <PresentCard
-                        title="DeWALT - Інструмент зі справжнім характером"
-                        isMain
-                        src={deValt}
-                        className="col-span-2 row-span-2"
-                    />
-                    <PresentCard
-                        title=""
-                        src={treschetka}
-                        className="row-span-2"
-                    />
-                    <PresentCard
-                        title="Нове надходження"
-                        src={kraska}
-                        className=""
-                    />
-                    <PresentCard
-                        title="Акції на сверла"
-                        src={sverla}
-                        className=""
-                    /> */}
                 </div>
+            </section>
+            <section>
+                <div className="container mx-auto grid grid-cols-2 gap-y-32 gap-x-10 py-20">
+                    <CategoryPreview
+                        title="Малярні товари"
+                        products={products}
+                    />
+                    <CategoryPreview
+                        title="Малярні товари"
+                        products={products}
+                    />
+                    <CategoryPreview
+                        title="Малярні товари"
+                        products={products}
+                    />
+                    <CategoryPreview
+                        title="Малярні товари"
+                        products={products}
+                    />
+                    <CategoryPreview
+                        title="Малярні товари"
+                        products={products}
+                    />
+                    <CategoryPreview
+                        title="Малярні товари"
+                        products={products}
+                    />
+                </div>
+            </section>
+            <section className=" bg-gray-dark text-white">
+                    <h2 className="container mx-auto font-prosto text-3xl mb-6">Наші бренди</h2>
+                    <div className="w-[1700px] mx-auto flex justify-center items-center gap-10">
+                        <RoundIconButton
+                            icon={<ChevronLeftIcon className="text-black w-6 h-6"/>}
+                        />
+                        <div className="container flex justify-between">
+                            {
+                                brands.map(brand => (
+                                    <Brand
+                                        key={brand.id}
+                                        src={brand.logo}
+                                    />
+                                )) 
+                            }
+                        </div>
+                        <RoundIconButton
+                           icon={<ChevronRightIcon className="text-black w-6 h-6"/>} 
+                        />
+                    </div>
             </section>
         </>
     )

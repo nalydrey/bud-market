@@ -13,6 +13,7 @@ export default {
                 "gray-medium": "#3B3B3B",
                 "gray-dark": "#212526",
                 "gray-white": "#F2F5F7",
+                "blue-dark": "#180A3E",
             },
             gridTemplateColumns: {
                 fill: "repeat(auto-fill, minmax(max-content, 200px))",
