@@ -4,12 +4,12 @@ import { ChangeEvent, useEffect, useState } from "react"
 import { SERVER_PATH } from "../../constants/server"
 import { BrandModel } from "../../models/entities/brand.model"
 
-export interface BrandForm {
+export interface IBrandForm {
     name: string
     logoImg: File | null
 }
 
- const initialValues: BrandForm = {
+ const initialValues: IBrandForm = {
     name: '',
     logoImg: null
 }
@@ -17,7 +17,7 @@ export interface BrandForm {
 interface BrandFormProps {
     editData?: BrandModel | null
     name?: string
-    onSubmit: (form: BrandForm) => void
+    onSubmit: (form: IBrandForm) => void
 }
 
 

@@ -4,6 +4,8 @@ import { HomePage } from "../pages/home-page.component";
 import { AdminPage } from "../pages/admin-page.component";
 import { BrandPage } from "../pages/brand-page";
 import { AdminHomePage } from "../pages/admin-home-page";
+import { LabelsPage } from "../pages/labels-page.component";
+import { CategoriesPage } from "../pages/categories-page.component";
 
 export const router = createBrowserRouter([
     {
@@ -25,6 +27,14 @@ export const router = createBrowserRouter([
             {
               path: 'brands',
               element: <BrandPage/>
+            },
+            {
+              path: 'labels',
+              element: <LabelsPage/>
+            },
+            {
+              path: 'categories',
+              element: <CategoriesPage/>
             }
           ]
         }

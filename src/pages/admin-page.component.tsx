@@ -1,7 +1,3 @@
-import { useState } from "react"
-import { MainInput } from "../components/MainInput.component"
-import { BrandForm } from "../components/forms/BrandForm.component"
-import { useGetBrandsQuery } from "../api/createApi"
 import { Outlet, useNavigate } from "react-router-dom"
 
 export const AdminPage = () => {
@@ -28,10 +24,17 @@ export const AdminPage = () => {
                             className="p-4 hover:text-orange-primary border-b w-full text-start"
                             onClick={() => handleNavigate('brands')}
                         >Бренди</button>
+                        <button 
+                            className="p-4 hover:text-orange-primary border-b w-full text-start"
+                            onClick={() => handleNavigate('labels')}
+                        >Мітки</button>
+                        <button 
+                            className="p-4 hover:text-orange-primary border-b w-full text-start"
+                            onClick={() => handleNavigate('categories')}
+                        >Категорії</button>
               
                     </div>
                     <div className=" col-span-3">
-                    {/* <BrandForm/> */}
                         <Outlet/>
                     </div>
                 </div>
