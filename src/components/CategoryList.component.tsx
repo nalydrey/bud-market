@@ -1,18 +1,21 @@
 import { ChevronRightIcon } from "@heroicons/react/20/solid"
-import { categories } from "../data/categories"
+// import { categories } from "../data/categories"
 import { MouseEvent } from "react"
 import { SubCategoryList } from "./SubCategoryList"
+import { CategoryModel } from "../models/entities/category.model"
 
 
 interface CategoryListProps {
+    categories: CategoryModel[]
     activeEl: string
-    sublist?: string[]
-    onClick?: (e: MouseEvent<HTMLButtonElement>, name: string) => void
-    onMouseEnter?: (e: MouseEvent<HTMLButtonElement>, name: string) => void
+    sublist?: CategoryModel[]
+    onClick?: (e: MouseEvent<HTMLButtonElement>, item: CategoryModel) => void
+    onMouseEnter?: (e: MouseEvent<HTMLButtonElement>, name: CategoryModel) => void
     onMouseLeave?: (e: MouseEvent<HTMLDivElement>) => void
 }
 
 export const CategoryList = ({
+    categories,
     activeEl,
     sublist = [],
     onClick,
@@ -21,6 +24,10 @@ export const CategoryList = ({
 }: CategoryListProps) => {
 
     console.log(activeEl);
+
+    const handleClick = (e: MouseEvent<HTMLButtonElement>, item: CategoryModel) => {
+        onClick && onClick(e, item)
+    }
     
     return (
         <div 
@@ -32,12 +39,12 @@ export const CategoryList = ({
                 {categories.map(category => (
                     <li >
                         <button 
-                            className={`p-6 w-full flex items-center justify-between gap-10 duration-200 ${activeEl === category.name ? 'bg-black text-white':'bg-white'}`}
-                            onClick = {(e) => {onClick && onClick(e, category.name)}}
-                            onMouseEnter={(e) => {onMouseEnter && onMouseEnter(e, category.name)}}
+                            className={`p-6 w-full flex items-center justify-between gap-10 duration-200 ${activeEl === category.systemName ? 'bg-black text-white':'bg-white'}`}
+                            onClick = {(e) => {handleClick(e, category)}}
+                            onMouseEnter={(e) => {onMouseEnter && onMouseEnter(e, category)}}
                         >
                             <span className="first-letter:capitalize">{category.name}</span>
-                            <ChevronRightIcon className="w-8"/>
+                           {!!category.children.length && <ChevronRightIcon className="w-8"/>} 
                         </button>
                     </li>
                 ))}
@@ -46,6 +53,7 @@ export const CategoryList = ({
                 !!sublist.length &&
                 <SubCategoryList
                         list={sublist}
+                        onClick={handleClick}
                 />
             }
         </div>

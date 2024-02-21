@@ -2,7 +2,8 @@ import { ChartBarIcon } from '@heroicons/react/24/solid'
 import { IconButton } from './IconButton.component'
 import { CheckIcon, HeartIcon } from '@heroicons/react/24/outline'
 import { OutlinedSvgButton } from './OutlinedSvgButton.component'
-import { MouseEvent } from 'react'
+import { MouseEvent, useState } from 'react'
+import { CardControl } from './card-control.component'
 
 interface Label {
     title: string
@@ -12,8 +13,10 @@ interface Label {
 interface ProductCardProps {
     onChart?: (e: MouseEvent<HTMLButtonElement>) => void
     onFavorite?: (e: MouseEvent<HTMLButtonElement>) => void
-    src: string
-    label?: Label 
+    onDelete?: (e: MouseEvent<HTMLButtonElement>) => void
+    onEdit?: (e: MouseEvent<HTMLButtonElement>) => void
+    src: string[]
+    label?: Label | null
     title: string
     price: number
     oldPrice?: number
@@ -22,6 +25,8 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({
+    onDelete,
+    onEdit,
     onChart,
     onFavorite,
     src,
@@ -32,8 +37,15 @@ export const ProductCard = ({
     status,
     union = '₴'
 }: ProductCardProps) => {
+
+    const [number, setNumber] = useState<number>(0)
+
+    const handleChangeSlide = (index: number) => {
+        setNumber(index)
+    }
+
     return (
-        <div className=' relative rounded-sm max-w-[310px] border p-3 pb-0 w-full'>
+        <div className=' relative rounded-sm max-w-[310px] border p-3 pb-0 w-full flex flex-col gap-1'>
             <div className='flex justify-end gap-1'>
                 <IconButton
                     icon = {<ChartBarIcon className= ' text-gray-secondary'/>}
@@ -45,15 +57,21 @@ export const ProductCard = ({
                 />
             </div>
             {/*------------------- Slider -----------------------*/}
-            <div>
-                <div className='flex items-center justify-center mt-1 mb-3'>
-                    <img src={src} alt="image" />
+            <div className='grow flex flex-col max-h-44'>
+                <div className='flex items-center justify-center mt-1 mb-3 max-w-[200px] overflow-hidden grow self-center'>
+                    <img src={src[number]} alt="image" className='w-full h-full object-contain' />
                 </div>
                 <div className='flex gap-1'>
-                    <button className='h-[2px] bg-gray-secondary grow'></button>
-                    <button className='h-[2px] bg-orange-primary grow'></button>
-                    <button className='h-[2px] bg-gray-secondary grow'></button>
-                    <button className='h-[2px] bg-gray-secondary grow'></button>
+                    {
+                        src.map((img, i) => (
+                           <button 
+                                key = {i}
+                                className={`h-[3px] grow ${number === i ?'bg-orange-primary' : 'bg-gray-secondary'}`}
+                                onClick={() => handleChangeSlide(i)}
+                            />
+                           ) 
+                        ) 
+                    }
                 </div>
             </div>
             {/* ------------------------------------------------- */}
@@ -68,7 +86,10 @@ export const ProductCard = ({
                     </div>
                     {
                         status &&
-                        <div className='flex items-end gap-1 text-green-600'>
+                        <div 
+                            className='flex items-end gap-1 text-green-600'
+                            style={{color: status.color}}
+                        >
                             <CheckIcon className='w-4 h-4'/>
                             <span className='text-sm'>{status.title}</span>
                         </div>
@@ -81,10 +102,18 @@ export const ProductCard = ({
             </div>
             {
                 label &&
-                <div className='absolute top-3 left-3 bg-blue-dark text-white py-1 px-2  text-sm'>
+                <div 
+                    className={`absolute top-3 left-3 text-white py-1 px-2  text-sm`}
+                    style={{background: label.color}}
+                >
                     {label.title}
                 </div>
             }
+            <CardControl
+                className='absolute top-0 right-0 translate-x-1/3 -translate-y-1/2'
+                onDelete={onDelete}
+                onEdit={onEdit}
+            />
         </div>
     )
 }

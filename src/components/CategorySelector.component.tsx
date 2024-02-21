@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useGetCategoriesQuery } from "../api/createApi"
+import { useGetCategoriesQuery, useGetTreeCategoriesQuery } from "../api/createApi"
 import { CategoryModel } from "../models/entities/category.model"
 import { CategoryItem } from "./category-item.component"
 
@@ -12,7 +12,7 @@ export const CategorySelector = ({
     onClick
 }: CategorySelectorProps) => {
 
-    const { data, isSuccess } = useGetCategoriesQuery(undefined)
+    const { data, isSuccess } = useGetTreeCategoriesQuery(undefined)
     const [changedCategory, setCategory] = useState<CategoryModel | null>(null) 
 
 

@@ -1,4 +1,4 @@
-import { IProduct } from "../models/product.model";
+import { IProduct } from "../models/entities/product.model";
 import pfCondor from '../assets/images/Rectangle 20.png'
 
 export const products: IProduct[] = [

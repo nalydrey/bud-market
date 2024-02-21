@@ -1,11 +1,17 @@
 import { PresentCard } from "../components/PresentCard.component"
 import { presentData } from "../data/presentSectionData"
 import { CategoryPreview } from "../components/Category-preview.component"
-import { products } from "../data/test-product"
 import { Brand } from "../components/Brand.component"
-import { brands } from "../data/brands"
 import { RoundIconButton } from "../components/RoundIconButton.component"
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline"
+import { useGetBrandsQuery, useGetCategoriesQuery } from "../api/createApi"
+import {Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
+import { FreeMode } from "swiper/modules"
+import 'swiper/css'
+import 'swiper/css/bundle'
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+
 
 const gridStyles = [
     "col-span-2 row-span-2",
@@ -13,6 +19,32 @@ const gridStyles = [
 ]
 
 export const HomePage = () => {
+
+    const {data, isSuccess} = useGetCategoriesQuery({page: 0})
+
+    const navigate = useNavigate()
+
+    const [swiperRef, setSwiperRef] = useState<SwiperClass | null>(null);
+    const {data:brands, isSuccess: isSuccessBrands} = useGetBrandsQuery(undefined)
+
+    console.log(data);
+    
+
+    
+    const toPrew = () => {
+        swiperRef && 
+        swiperRef.slidePrev()
+    }
+    
+    const toNext= () => {
+        swiperRef && 
+        swiperRef.slideNext()
+    }
+
+    const handleClickCatalog = () => {
+        navigate('catalog')
+    }
+
     return (
         <>
             <section className=" bg-gray-dark text-white py-5">
@@ -20,10 +52,12 @@ export const HomePage = () => {
                     {
                         presentData.map((data, i) => (
                             <PresentCard
+                                key = {data.title}
                                 title={data.title}
                                 isMain={data.isMain}
                                 src={data.imgUrl}
                                 className={gridStyles[i]}
+                                onClickCatalog={handleClickCatalog}
                             />
                         ))
                     }
@@ -31,30 +65,16 @@ export const HomePage = () => {
             </section>
             <section>
                 <div className="container mx-auto grid grid-cols-2 gap-y-32 gap-x-10 py-20">
-                    <CategoryPreview
-                        title="Малярні товари"
-                        products={products}
-                    />
-                    <CategoryPreview
-                        title="Малярні товари"
-                        products={products}
-                    />
-                    <CategoryPreview
-                        title="Малярні товари"
-                        products={products}
-                    />
-                    <CategoryPreview
-                        title="Малярні товари"
-                        products={products}
-                    />
-                    <CategoryPreview
-                        title="Малярні товари"
-                        products={products}
-                    />
-                    <CategoryPreview
-                        title="Малярні товари"
-                        products={products}
-                    />
+                    {
+                        isSuccess &&
+                        data.categories.map(category => (
+                            <CategoryPreview
+                                key = {category.id}
+                                category={category}
+                            />
+                        ))
+                    }
+                   
                 </div>
             </section>
             <section className=" bg-gray-dark text-white">
@@ -62,19 +82,34 @@ export const HomePage = () => {
                     <div className="w-[1700px] mx-auto flex justify-center items-center gap-10">
                         <RoundIconButton
                             icon={<ChevronLeftIcon className="text-black w-6 h-6"/>}
+                            onClick={  toPrew }
                         />
-                        <div className="container flex justify-between">
+                        <div className="container flex justify-between gap-2">
+                        <Swiper
+                            slidesPerView={6}
+                            spaceBetween={30}
+                            freeMode={true}
+                            modules={[FreeMode]}
+                            onSwiper={setSwiperRef}
+                        >
                             {
-                                brands.map(brand => (
-                                    <Brand
-                                        key={brand.id}
-                                        src={brand.logo}
-                                    />
+                                isSuccessBrands &&
+                                brands.brands.map(brand => (
+                                    <SwiperSlide>
+                                         <Brand
+                                            key={brand.id}
+                                            src={'http://localhost:3030/'+brand.logoImg}
+                                        />
+                                    </SwiperSlide>
+                                   
                                 )) 
                             }
+                        </Swiper>
+                      
                         </div>
                         <RoundIconButton
-                           icon={<ChevronRightIcon className="text-black w-6 h-6"/>} 
+                           icon={<ChevronRightIcon className="text-black w-6 h-6"/>}
+                           onClick={ toNext } 
                         />
                     </div>
             </section>

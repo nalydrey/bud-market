@@ -4,12 +4,19 @@ import { navigation } from "../data/navigation"
 import {Input} from "../components/Input.component"
 import { CategoryList } from "../components/CategoryList.component"
 import { MouseEvent, useEffect, useState } from "react"
-import { categories } from "../data/categories"
+// import { categories } from "../data/categories"
+import { CategoryModel } from "../models/entities/category.model"
 
-export const SubHeader = () => {
+interface SubHeaderProps {
+    categories: CategoryModel[]
+}
+
+export const SubHeader = ({
+    categories
+}: SubHeaderProps) => {
 
     const [isOpen, setOpen] = useState<boolean>(false)
-    const [sublist, setSublist] = useState<string[]>([])
+    const [sublist, setSublist] = useState<CategoryModel[]>([])
     const [activeElem, setActiveElement] = useState<string>('')
 
     useEffect(()=>{
@@ -28,18 +35,14 @@ export const SubHeader = () => {
         setOpen(!isOpen)
     }
 
-    const handleClickCategoryItem = (e: MouseEvent<HTMLButtonElement>, name: string) => {
-        setActiveElement(name)
-        console.log(name);
-        const item = categories.find(category => category.name === name)
-        if(item) {
-            setSublist(item.subCategories)
-        }
+    const handleClickCategoryItem = (e: MouseEvent<HTMLButtonElement>, item: CategoryModel) => {
+        setActiveElement(item.systemName)
+        setSublist(item.children)
     }
 
     const handleMouseLeave = (e: MouseEvent<HTMLDivElement>) => {
-                setActiveElement('')
-                setSublist([])
+        setActiveElement('')
+        setSublist([])
     }
 
 
@@ -62,6 +65,7 @@ export const SubHeader = () => {
                 {
                     isOpen &&
                     <CategoryList
+                        categories={categories}
                         activeEl={activeElem}
                         sublist = {sublist}
                         onMouseEnter={handleClickCategoryItem}

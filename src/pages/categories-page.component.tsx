@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useDeleteCategoryMutation, useGetCategoriesQuery, useUpdateCategoryMutation } from "../api/createApi"
+import { useDeleteCategoryMutation, useGetCategoriesQuery, useGetTreeCategoriesQuery, useUpdateCategoryMutation } from "../api/createApi"
 import { CategoryItem } from "../components/category-item.component";
 import { CategoryForm, CategoryFormModel } from "../components/forms/CategoryForm.component";
 import { ModalWindow } from "../components/modal-window.component";
@@ -8,7 +8,7 @@ import { useModal } from "../hooks/useModal";
 
 export const CategoriesPage = () => {
 
-    const {data, isSuccess} = useGetCategoriesQuery(undefined)
+    const {data, isSuccess} = useGetTreeCategoriesQuery(undefined)
     const [deleteCategory] = useDeleteCategoryMutation()
     const [editCategory] =  useUpdateCategoryMutation()
 

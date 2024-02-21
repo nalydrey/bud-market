@@ -1,3 +1,4 @@
+import { MouseEvent } from "react"
 import { SvgButton } from "./SvgButton.component"
 import { UniButton } from "./UniButton.component"
 
@@ -6,15 +7,20 @@ interface PresentCardProps {
     isMain?: boolean
     src: string
     className?: string
+    onClickCatalog?: (e: MouseEvent<HTMLButtonElement>) => void
 }
 
 export const PresentCard = ({
     title,
     isMain,
     src,
-    className
+    className,
+    onClickCatalog
 }: PresentCardProps) => {
    
+    const handleClickCatalog = (e: MouseEvent<HTMLButtonElement>) => {
+        onClickCatalog && onClickCatalog(e)
+    }
 
     return (
         <div 
@@ -32,6 +38,7 @@ export const PresentCard = ({
                 isMain &&
                 <UniButton
                     title="перейти до каталогу"
+                    onClick={handleClickCatalog}
                 />
             }
             <SvgButton 

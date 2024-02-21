@@ -1,4 +1,6 @@
 import { useFormik } from "formik"
+import { MainInput } from "../MainInput.component"
+import { FormButton } from "../FormButton.componet"
 
 
 export interface ILabelForm {
@@ -29,28 +31,33 @@ export const LabelForm = ({
         }
     })
 
+
     return (
         <form 
             className="flex flex-col gap-2"
             onSubmit={handleSubmit}
         >
-            <input 
-                type="text" 
+            <MainInput
                 name="name"
-                placeholder="введіть назву мітки"
+                title="Назва мітки"
                 value={values.name}
                 onChange={handleChange}
             />
-            <input 
-                type="color" 
-                name="color"
-                placeholder="введіть колір мітки #FFFFFF"
-                value={values.color}
-                onChange={handleChange}
+            <label htmlFor="color" className="border rounded-md p-2 flex justify-center items-center cursor-pointer" style={{background: values.color}}>
+                <input 
+                    className="w-0 h-0 opacity-0"
+                    id='color'
+                    type="color" 
+                    name="color"
+                    placeholder="введіть колір мітки #FFFFFF"
+                    value={values.color}
+                    onChange={handleChange}
+                />
+                <span className="font-bold">Оберіть колір</span>
+            </label>
+            <FormButton
+                title="Зберегти"
             />
-            <button
-                type="submit"
-            >Submit</button>
         </form>
     )
 }

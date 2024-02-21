@@ -1,9 +1,8 @@
-import { IdentificationIcon } from "@heroicons/react/24/solid";
-import { useCreateBrandMutation, useDeleteBrandMutation, useEditBrandMutation, useGetBrandsQuery } from "../api/createApi"
+import { useDeleteBrandMutation, useEditBrandMutation, useGetBrandsQuery } from "../api/createApi"
 import { BrandCard } from "../components/brand-card.component";
 import { SERVER_PATH } from "../constants/server";
 import { ModalProvider } from "../components/modal-provider.component";
-import { BrandForm } from "../components/forms/BrandForm.component";
+import { BrandForm, IBrandForm } from "../components/forms/BrandForm.component";
 import { useState } from "react";
 import { BrandModel } from "../models/entities/brand.model";
 
@@ -35,7 +34,7 @@ export const BrandPage = () => {
         setOpenState(Array.from(set))
     }
 
-    const handleSubmitBrandForm = (form: BrandForm) => {
+    const handleSubmitBrandForm = (form: IBrandForm) => {
         console.log(form);
         
         if(selectedBrand){
@@ -48,7 +47,7 @@ export const BrandPage = () => {
     }
 
     return (
-        <div>
+        <div className="grid grid-cols-4 gap-5 gap-y-10">
             {
                 isSuccess &&
                 data.brands.map((brand) => (

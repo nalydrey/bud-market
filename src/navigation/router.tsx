@@ -6,6 +6,10 @@ import { BrandPage } from "../pages/brand-page";
 import { AdminHomePage } from "../pages/admin-home-page";
 import { LabelsPage } from "../pages/labels-page.component";
 import { CategoriesPage } from "../pages/categories-page.component";
+import { ProductsPage } from "../pages/admin/products-page.component";
+import { CatalogHomePage } from "../pages/catalog/catalog-index.component";
+import { SelfCatalogPage } from "../pages/catalog/level_one/SelfCatalogPage.component";
+import { RootCatalogPage } from "../pages/catalog/level_one/root-catalog.component";
 
 export const router = createBrowserRouter([
     {
@@ -35,9 +39,31 @@ export const router = createBrowserRouter([
             {
               path: 'categories',
               element: <CategoriesPage/>
-            }
+            },
+            {
+              path: 'products',
+              element: <ProductsPage/>
+            },
           ]
-        }
+        },
+        {
+          path: '/catalog',
+          element: <CatalogHomePage/>,
+          children: [
+            {
+              index: true,
+              element: <RootCatalogPage/>
+            },
+            {
+              path: ':categoryName',
+              element: <SelfCatalogPage/>
+            },
+          ]
+        },
+        // {
+        //   path: '/catalog/:categoryName',
+        //   element: <SelfCatalogPage/>
+        // }
       ]
     },
   ]);

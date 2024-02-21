@@ -6,14 +6,20 @@ import { CreateLabelDto } from '../models/dto/create-label.dto'
 import { LabelsResponce } from '../models/response/labels-responce.model'
 import { EditLabelDto } from '../models/dto/edit-label.dto'
 import { CategoriesResponce } from '../models/response/categories-responce'
-import { CategoryFormModel } from '../components/forms/CategoryForm.component'
 import { CategoryResponce } from '../models/response/category-responce.model'
 import { EditCategoryDto } from '../models/dto/edit-category.dto'
+import { ProductResponce } from '../models/response/product-responce.model'
+import { CreateProductDto } from '../models/dto/create-product.dto'
+import { ProductsResponce } from '../models/response/products-responce.model'
+import { ProductQueryBuilderDto } from '../models/dto/queryBuilder-product.dto'
+import { queryString } from 'object-query-string'
+import { CategoryQueryBuilderDto } from '../models/dto/queryBuilder-category'
+
 
 export const myApi = createApi({
     reducerPath: 'myApi',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3030/api/' }),
-    tagTypes: ['Brands', 'Labels', 'Categories'],
+    tagTypes: ['Brands', 'Labels', 'Categories', 'Products'],
     endpoints: (builder) => ({
 
       getBrands: builder.query<BrandsResponce, undefined>({
@@ -35,7 +41,7 @@ export const myApi = createApi({
           url: 'brands',
           method: 'POST',
           body
-        })
+        }),
       }),
 
       editBrand: builder.mutation<BrandResponce, {id: number, body: FormData}>({
@@ -83,12 +89,33 @@ export const myApi = createApi({
       }),
 
 
-      getCategories: builder.query<CategoriesResponce, undefined>({
+      getTreeCategories: builder.query<CategoriesResponce, undefined>({
         providesTags: ['Categories'],
-        query: () => '/categories'
+        query: () => `/categories/tree`
+      }),
+     
+      getDescendantsCategories: builder.query<CategoryResponce, string>({
+        providesTags: ['Categories'],
+        query: (systemName) => `/categories/tree/${systemName}`
+      }),
+     
+      getAncestorsCategories: builder.query<CategoriesResponce, string>({
+        providesTags: ['Categories'],
+        query: (systemName) => `/categories/array/${systemName}`
       }),
 
-      createCategory: builder.mutation<CategoryResponce, CategoryFormModel>({
+
+      
+      getCategories: builder.query<CategoriesResponce, CategoryQueryBuilderDto>({
+        providesTags: ['Categories'],
+        query: (query) => {
+          const qs = queryString(query)
+          return `/categories/many?${qs}`
+        } 
+      }),
+     
+
+      createCategory: builder.mutation<CategoryResponce, FormData>({
         invalidatesTags: ['Categories'],
         query: (body) => ({
           url: '/categories',
@@ -115,7 +142,33 @@ export const myApi = createApi({
             body
           }
         }
-      })
+      }),
+
+
+      createProduct: builder.mutation<ProductResponce, CreateProductDto>({
+        invalidatesTags: ['Products'],
+        query: (body) => ({
+           url: '/products',
+           method: 'POST',
+           body
+        })
+      }),
+
+      deleteProduct: builder.mutation<ProductResponce, number>({
+        invalidatesTags: ['Products'],
+        query: (id) => ({
+          url: `/products/${id}`,
+          method: 'DELETE'
+        })
+      }),
+
+      getProducts: builder.query<ProductsResponce, ProductQueryBuilderDto>({
+        providesTags: ['Products'],
+        query: (query) => {
+          const qs = queryString(query)
+          return `/products?${qs}`
+        }
+      }),
 
     }),
   })
@@ -132,6 +185,12 @@ export const myApi = createApi({
     useGetCategoriesQuery,
     useCreateCategoryMutation,
     useDeleteCategoryMutation,
-    useUpdateCategoryMutation
+    useUpdateCategoryMutation,
+    useCreateProductMutation,
+    useGetProductsQuery,
+    useDeleteProductMutation,
+    useGetTreeCategoriesQuery,
+    useGetDescendantsCategoriesQuery,
+    useGetAncestorsCategoriesQuery
   } = myApi
 

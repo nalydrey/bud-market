@@ -3,6 +3,8 @@ import { MainInput } from "../MainInput.component"
 import { ChangeEvent, useEffect, useState } from "react"
 import { SERVER_PATH } from "../../constants/server"
 import { BrandModel } from "../../models/entities/brand.model"
+import { FileDashedButton } from "../file-dashed-button.component"
+import { FormButton } from "../FormButton.componet"
 
 export interface IBrandForm {
     name: string
@@ -18,14 +20,14 @@ interface BrandFormProps {
     editData?: BrandModel | null
     name?: string
     onSubmit: (form: IBrandForm) => void
+    onClose?: (name: string) => void
 }
 
 
 
 export const BrandForm = ({
     editData,
-    name,
-    onSubmit
+    onSubmit,
 }: BrandFormProps) => {
 
     const [url, setUrl] = useState<string>('')
@@ -45,10 +47,10 @@ export const BrandForm = ({
         }
     }, [editData, setFieldValue])
 
-   
-
 
     const handleChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
+        console.log('!');
+        
         if(e.target.files){
             const fakeUrl = URL.createObjectURL(e.target.files[0])
             setUrl(fakeUrl)
@@ -56,29 +58,27 @@ export const BrandForm = ({
         } 
     }
 
-    console.log(values);
-    
-    
-
     return (
-        <form 
-            className="flex flex-col max-w-sm gap-5"
-            action=""
-            onSubmit={handleSubmit}
-        >
-            <MainInput
-                name="name"
-                value={values.name}
-                placeholder="enter brand name"
-                onChange={handleChange}
-            />
-            <input 
-                name="logoImg"
-                type="file" 
-                onChange={handleChangeFile}
-            />
-            <img src={url} alt="" />
-            <button>Sent</button>
-        </form>
+       
+            <form 
+                className="flex flex-col max-w-sm gap-5"
+                action=""
+                onSubmit={handleSubmit}
+            >
+                <MainInput
+                    name="name"
+                    title="Назва бренду"
+                    value={values.name}
+                    onChange={handleChange}
+                />
+                <FileDashedButton
+                    title="Додати логотип"
+                    url={url}
+                    onChange={handleChangeFile}
+                />
+                <FormButton
+                    title="Зберегти"
+                />
+            </form>
     )
 }

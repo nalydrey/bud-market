@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"
 import { ModalWindow } from "./modal-window.component"
+import { FormContainer } from "./form-container.component"
+import { Alert, Snackbar } from "@mui/material"
 
 interface ModalProviderItem {
     name: string
@@ -9,15 +11,19 @@ interface ModalProviderItem {
 
 
 interface ModalProviderProps {
+    isLoading?: boolean
     openedList: string[]
     children: JSX.Element | JSX.Element[]
+    onClickEmptySpace?: (name: string) => void
     onClose?: (name: string) => void
 }
 
 export const ModalProvider = ({
     openedList,
+    isLoading,
     children,
-    onClose
+    onClose,
+    onClickEmptySpace
 }: ModalProviderProps) => {
 
 
@@ -48,6 +54,10 @@ export const ModalProvider = ({
         onClose && onClose(name)
     }
 
+    const handleClickEmptySpace = (name: string) => {
+        onClickEmptySpace && onClickEmptySpace(name)
+    }
+
 
     return (
         <>
@@ -55,16 +65,17 @@ export const ModalProvider = ({
              {
                 state.map((item) => {
                     return (
-                        <>
-                        {
-                            item.open &&
-                            <ModalWindow
-                                onClickEmptySpace={() => handleClose(item.name)}
+                        <ModalWindow
+                            open = {item.open}
+                            onClickEmptySpace={() => handleClickEmptySpace(item.name)}
+                        >
+                            <FormContainer
+                                isLoading = {isLoading}
+                                onClose={() => handleClose(item.name)}
                             >
                                 {item.child}
-                            </ModalWindow>
-                        }
-                        </>    
+                            </FormContainer>
+                        </ModalWindow>
                     )
                 })
             }

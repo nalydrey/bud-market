@@ -32,6 +32,10 @@ export const AdminPage = () => {
                             className="p-4 hover:text-orange-primary border-b w-full text-start"
                             onClick={() => handleNavigate('categories')}
                         >Категорії</button>
+                        <button 
+                            className="p-4 hover:text-orange-primary border-b w-full text-start"
+                            onClick={() => handleNavigate('products')}
+                        >Продукція</button>
               
                     </div>
                     <div className=" col-span-3">
