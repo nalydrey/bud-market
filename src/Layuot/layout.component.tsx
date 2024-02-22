@@ -2,14 +2,12 @@ import { Outlet } from "react-router-dom"
 import { Header } from "./header.component"
 import { Footer } from "./footer.component"
 import { SubHeader } from "./subheader.component"
-import { useGetTreeCategoriesQuery } from "../api/createApi"
+import { useGetTreeCategoriesQuery } from "../api/categoryApi"
 
 export const Layout = () => {
 
-    const {data, isSuccess} = useGetTreeCategoriesQuery(undefined)
+    const {data: categories, isSuccess} = useGetTreeCategoriesQuery(undefined)
 
-    console.log(data);
-    
 
     return (
         <>
@@ -21,7 +19,7 @@ export const Layout = () => {
             />
             
             <SubHeader
-                categories={isSuccess ? data.categories : []}
+                categories={isSuccess ? categories : []}
             />
             <main className="grow">
                 <Outlet/>

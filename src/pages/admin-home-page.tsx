@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react"
 import { BrandForm, IBrandForm } from "../components/forms/BrandForm.component"
 import { ModalProvider } from "../components/modal-provider.component"
-import { useCreateBrandMutation, useCreateCategoryMutation, useCreateLabelMutation, useCreateProductMutation } from "../api/createApi"
 import { ILabelForm, LabelForm } from "../components/forms/LabelForm.component"
 import { CategoryForm, CategoryFormModel } from "../components/forms/CategoryForm.component"
 import { ProductForm, ProductFormData } from "../components/forms/ProductForm.component"
 import { usePhotoLoad } from "../api/usePhotoLoad"
 import { Alert, Snackbar } from "@mui/material"
+import { useCreateBrandMutation } from "../api/brandApi"
+import { useCreateLabelMutation } from "../api/labelApi"
+import { useCreateCategoryMutation } from "../api/categoryApi"
+import { useCreateProductMutation } from "../api/productApi"
 
 
 export const AdminHomePage = () => {

@@ -1,11 +1,11 @@
-import { useDeleteLabelMutation, useGetLabelsQuery } from "../api/createApi"
+import { useDeleteLabelMutation, useGetLabelsQuery } from "../api/labelApi"
 import { CardControl } from "../components/card-control.component"
 
 
 
 export const LabelsPage = () => {
 
-    const {data, isSuccess} = useGetLabelsQuery(undefined)
+    const {data: labels, isSuccess} = useGetLabelsQuery(undefined)
     const [deleteLabel] = useDeleteLabelMutation()
 
 
@@ -18,7 +18,7 @@ export const LabelsPage = () => {
         <div className="flex gap-2">
             {
                 isSuccess &&
-                data.labels.map(label => {
+                labels.map(label => {
                     return (
                         <div 
                             className="relative max-w-sm p-1 w-full"

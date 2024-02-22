@@ -1,4 +1,4 @@
-import { useDeleteProductMutation, useGetProductsQuery } from "../../api/createApi"
+import { useDeleteProductMutation, useGetProductsQuery } from "../../api/productApi";
 import { ProductCard } from "../../components/Card.component";
 import { transformStatus } from "../../features/transform-status.func";
 
@@ -7,10 +7,9 @@ export const ProductsPage = () => {
 
 
 
-    const {data, isSuccess} = useGetProductsQuery(undefined)
+    const {data: products, isSuccess} = useGetProductsQuery(undefined)
     const [deleteProduct] = useDeleteProductMutation()
 
-console.log(data);
 
     const handleDeleteProduct = (id: number) => {
         deleteProduct(id)
@@ -20,7 +19,7 @@ console.log(data);
     return (
         <div>
             {
-                isSuccess && data.products.map(product => {
+                isSuccess && products.map(product => {
                     const {id, priceHistory, label, title, images, status} = product
                     console.log();
                     

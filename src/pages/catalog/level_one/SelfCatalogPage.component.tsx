@@ -1,8 +1,9 @@
 import { useNavigate, useParams } from "react-router-dom"
-import { useGetDescendantsCategoriesQuery } from "../../../api/createApi"
 import { CategoryModel } from "../../../models/entities/category.model"
 import { SelfNestedCategory } from "../../../components/SelfNestedCategory.component"
 import { CategoryContainer } from "../../../components/containers/category-container.component"
+import { FilterPage } from "./filter-page.component"
+import { useGetDescendantsCategoriesQuery } from "../../../api/categoryApi"
 
 
 
@@ -11,24 +12,31 @@ export const SelfCatalogPage = () => {
     const {categoryName} = useParams<{categoryName: string}>()
     const navigate = useNavigate()
 
-    const {data, isSuccess} = useGetDescendantsCategoriesQuery(categoryName || '')
+    const {data: category, isSuccess} = useGetDescendantsCategoriesQuery(categoryName || '')
 
 
     const handleClick = (category: CategoryModel) => {
-        navigate(category.systemName)
+        navigate(`../${category.systemName}`)
     }
 
     return (
-        <CategoryContainer>
+        <>
             {
-                isSuccess &&
-                data.category.children.map(category => (
-                    <SelfNestedCategory
-                        category={category}
-                        onClick={handleClick}
-                    />
-                ))
+                isSuccess && category.children.length ?
+                <CategoryContainer>
+                    {
+                        isSuccess &&
+                        category.children.map(category => (
+                            <SelfNestedCategory
+                                category={category}
+                                onClick={handleClick}
+                            />
+                        ))
+                    }
+                </CategoryContainer>
+                :
+                <FilterPage/>
             }
-        </CategoryContainer>
+        </>
     )
 }

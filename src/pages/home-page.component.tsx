@@ -4,13 +4,14 @@ import { CategoryPreview } from "../components/Category-preview.component"
 import { Brand } from "../components/Brand.component"
 import { RoundIconButton } from "../components/RoundIconButton.component"
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline"
-import { useGetBrandsQuery, useGetCategoriesQuery } from "../api/createApi"
 import {Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 import { FreeMode } from "swiper/modules"
 import 'swiper/css'
 import 'swiper/css/bundle'
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useGetBrandsQuery } from "../api/brandApi"
+import { useGetCategoriesQuery } from "../api/categoryApi"
 
 
 const gridStyles = [
@@ -20,17 +21,13 @@ const gridStyles = [
 
 export const HomePage = () => {
 
-    const {data, isSuccess} = useGetCategoriesQuery({page: 0})
+    const {data: categories, isSuccess} = useGetCategoriesQuery({page: 0})
 
     const navigate = useNavigate()
 
     const [swiperRef, setSwiperRef] = useState<SwiperClass | null>(null);
-    const {data:brands, isSuccess: isSuccessBrands} = useGetBrandsQuery(undefined)
+    const {data:brands, isSuccess: isSuccessBrands} = useGetBrandsQuery({})
 
-    console.log(data);
-    
-
-    
     const toPrew = () => {
         swiperRef && 
         swiperRef.slidePrev()
@@ -67,7 +64,7 @@ export const HomePage = () => {
                 <div className="container mx-auto grid grid-cols-2 gap-y-32 gap-x-10 py-20">
                     {
                         isSuccess &&
-                        data.categories.map(category => (
+                        categories.map(category => (
                             <CategoryPreview
                                 key = {category.id}
                                 category={category}
@@ -94,7 +91,7 @@ export const HomePage = () => {
                         >
                             {
                                 isSuccessBrands &&
-                                brands.brands.map(brand => (
+                                brands.map(brand => (
                                     <SwiperSlide>
                                          <Brand
                                             key={brand.id}

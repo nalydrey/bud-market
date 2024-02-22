@@ -1,14 +1,14 @@
 import { useMemo, useState } from "react";
-import { useDeleteCategoryMutation, useGetCategoriesQuery, useGetTreeCategoriesQuery, useUpdateCategoryMutation } from "../api/createApi"
 import { CategoryItem } from "../components/category-item.component";
 import { CategoryForm, CategoryFormModel } from "../components/forms/CategoryForm.component";
 import { ModalWindow } from "../components/modal-window.component";
 import { CategoryModel } from "../models/entities/category.model";
 import { useModal } from "../hooks/useModal";
+import { useDeleteCategoryMutation, useGetTreeCategoriesQuery, useUpdateCategoryMutation } from "../api/categoryApi";
 
 export const CategoriesPage = () => {
 
-    const {data, isSuccess} = useGetTreeCategoriesQuery(undefined)
+    const {data: categories, isSuccess} = useGetTreeCategoriesQuery(undefined)
     const [deleteCategory] = useDeleteCategoryMutation()
     const [editCategory] =  useUpdateCategoryMutation()
 
@@ -43,7 +43,7 @@ export const CategoriesPage = () => {
         <div className="flex gap-2">
             {
                 isSuccess &&
-                data.categories.map(category => (
+                categories.map(category => (
                     <CategoryItem 
                         category={category}
                         onDelete={handleDelete}

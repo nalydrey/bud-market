@@ -2,9 +2,9 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline"
 import { ProductCard } from "./Card.component"
 import { RoundIconButton } from "./RoundIconButton.component"
 import { CategoryModel } from "../models/entities/category.model"
-import { useGetProductsQuery } from "../api/createApi"
 import { useState } from "react"
 import { ProductQueryBuilderDto } from "../models/dto/queryBuilder-product.dto"
+import { useGetProductsQuery } from "../api/productApi"
 
 interface CategoryPreviewProps {
     category: CategoryModel
@@ -17,7 +17,7 @@ export const CategoryPreview = ({
 
     const [query, setQuery] = useState<ProductQueryBuilderDto>({limit: 2, page: 0, filter: {category: {id: category.id}}})
 
-    const {data, isSuccess} = useGetProductsQuery(query)
+    const {data: products, isSuccess} = useGetProductsQuery(query)
 
     console.log(query);
 
@@ -49,7 +49,7 @@ export const CategoryPreview = ({
             <div className="flex gap-5">
                 {
                     isSuccess &&
-                    data.products.map(product => {
+                    products.map(product => {
                         const images = product.images.map(img => 'http://localhost:3030/' + img.fileName)
                         return (
                         <ProductCard

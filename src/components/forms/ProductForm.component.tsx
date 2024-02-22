@@ -1,5 +1,4 @@
 import { useFormik } from "formik"
-import { useGetBrandsQuery, useGetLabelsQuery } from "../../api/createApi"
 import { ModalWindow } from "../modal-window.component"
 import { CategorySelector } from "../CategorySelector.component"
 import { useModal } from "../../hooks/useModal"
@@ -7,6 +6,8 @@ import { CategoryModel } from "../../models/entities/category.model"
 import { ChangeEvent } from "react"
 import { MainInput } from "../MainInput.component"
 import { CardControl } from "../card-control.component"
+import { useGetBrandsQuery } from "../../api/brandApi"
+import { useGetLabelsQuery } from "../../api/labelApi"
 
 
 export interface ProductFormData {
@@ -58,7 +59,7 @@ export const ProductForm = ({
     onSubmit
 }: ProductFormProps) => {
 
-    const {data: brands, isSuccess: isSuccessBrands} = useGetBrandsQuery(undefined)
+    const {data: brands, isSuccess: isSuccessBrands} = useGetBrandsQuery({})
     const {data: labels, isSuccess: isSuccessLabels} = useGetLabelsQuery(undefined)
 
     const {open, close, status} = useModal()
@@ -143,7 +144,8 @@ export const ProductForm = ({
                 onChange={handleChange}
             >
                 {
-                    isSuccessBrands && brands.brands.map(brand => (
+                    isSuccessBrands && 
+                    brands.map(brand => (
                         <option key={brand.id} value={brand.id}>{brand.name}</option>
                     ))
                 }
@@ -153,7 +155,7 @@ export const ProductForm = ({
                 onChange={handleChange}
             >
                 {
-                    isSuccessLabels && labels.labels.map(label => (
+                    isSuccessLabels && labels.map(label => (
                         <option key={label.id} value={label.id}>{label.name}</option>
                     ))
                 }

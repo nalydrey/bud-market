@@ -1,8 +1,8 @@
 import { useParams, useNavigate, Outlet } from "react-router-dom"
-import { useGetAncestorsCategoriesQuery } from "../../api/createApi"
 import { PageLabel } from "../../components/page-label.component"
 import { Breadcrumbs } from "@mui/material"
 import { useMemo } from "react"
+import { useGetAncestorsCategoriesQuery } from "../../api/categoryApi"
 
 interface BreadCrumbsModel {
     name: string
@@ -30,7 +30,7 @@ export const CatalogHomePage = () => {
     const transformBreadcrumbs = useMemo<BreadCrumbsModel[]>(() => {
         let ancestorsArr: BreadCrumbsModel[] = []
         if(isSuccessAncestors){
-            ancestorsArr  = ancestors.categories.map(item => ({
+            ancestorsArr  = ancestors.map(item => ({
                 name: item.name,
                 path: item.systemName
             }))
@@ -47,7 +47,7 @@ export const CatalogHomePage = () => {
 
     const currentCategory = useMemo(()=>{
         return isSuccessAncestors 
-        ? ancestors.categories.find((item, i) => ancestors.categories.length === i+1)
+        ? ancestors.find((item, i) => ancestors.length === i+1)
         : null
     }, [ancestors, isSuccessAncestors])
     
