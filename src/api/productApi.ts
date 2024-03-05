@@ -37,6 +37,14 @@ export const productApiSlice = mainApi.injectEndpoints({
             },
             transformResponse: (responce: ProductsResponce) => responce.products
         }),
+      
+        getProduct: builder.query<ProductModel, number | string>({
+            providesTags: ['Products'],
+            query: (id) => {
+                return `/products/${id}`
+            },
+            transformResponse: (responce: ProductResponce) => responce.product
+        }),
 
     })
 })
@@ -45,4 +53,5 @@ export const {
     useCreateProductMutation,
     useDeleteProductMutation,
     useGetProductsQuery,
+    useGetProductQuery
 } = productApiSlice

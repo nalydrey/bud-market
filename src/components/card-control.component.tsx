@@ -1,5 +1,5 @@
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline"
-import { IconButton } from "./IconButton.component"
+import { IconButton } from "./buttons/IconButton.component"
 import { MouseEvent } from "react"
 
 interface CardControlProps {

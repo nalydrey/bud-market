@@ -4,20 +4,12 @@ import { ChangeEvent, useEffect, useMemo, useState } from "react"
 import { CategorySelector } from "../CategorySelector.component"
 import { CategoryModel } from "../../models/entities/category.model"
 import { Button, FormControlLabel, IconButton, Switch } from "@mui/material"
-import { MUITextField } from "../MUITextField.component"
+import { MUITextField } from "../inputs/MUITextField.component"
 import { FolderPlusIcon, PhotoIcon } from "@heroicons/react/24/outline"
+import { CategoryFormModel } from "../../models/forms/category-form.model"
+import { categoryFormInitData } from "../../data/initial-data/forms/category-form.init"
 
-export interface CategoryFormModel {
-    name: string
-    parentId: null | number
-    file: File | null
-}
 
-const initialValues: CategoryFormModel = {
-    name: '',
-    parentId: null,
-    file: null
-}
 
 interface CategoryFormProps {
     initData?: CategoryFormModel | null
@@ -34,7 +26,7 @@ export const CategoryForm = ({
     
 
     const {values, handleChange, handleSubmit, setValues} = useFormik({
-        initialValues,
+        initialValues: categoryFormInitData,
         onSubmit: (form) => {
             onSubmit(form)
         }

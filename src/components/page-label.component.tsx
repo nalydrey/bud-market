@@ -8,7 +8,7 @@ export const PageLabel = ({
 }: PageLabelProps) => {
   return (
     <h1 
-        className="text-3xl font-bold"
+        className="text-3xl font-bold first-letter:capitalize"
     >
         {title}
     </h1>

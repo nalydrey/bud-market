@@ -1,6 +1,6 @@
 export interface CharacteristicModel {
+    id: number
     name: string
-    title: string
     unit: string | null
     value: string
 }

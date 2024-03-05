@@ -1,21 +1,13 @@
 import { useFormik } from "formik"
-import { MainInput } from "../MainInput.component"
-import { FormButton } from "../FormButton.componet"
+import { MainInput } from "../inputs/MainInput.component"
+import { FormButton } from "../buttons/FormButton.componet"
+import { LabelFormModel } from "../../models/forms/label-form.model"
+import { labelFormInitData } from "../../data/initial-data/forms/label-form.init"
 
-
-export interface ILabelForm {
-    name: string
-    color: string
-}
-
-const initialValues: ILabelForm = {
-    name: '',
-    color: ''
-}
 
 interface LabelFormProps {
     name?: string
-    onSubmit: (form: ILabelForm) => void
+    onSubmit: (form: LabelFormModel) => void
 }
 
 export const LabelForm = ({
@@ -25,7 +17,7 @@ export const LabelForm = ({
 
 
     const {values, handleSubmit, handleChange} = useFormik({
-        initialValues,
+        initialValues: labelFormInitData,
         onSubmit: (form) => {
             onSubmit(form)
         }

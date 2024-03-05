@@ -4,55 +4,18 @@ import { CategorySelector } from "../CategorySelector.component"
 import { useModal } from "../../hooks/useModal"
 import { CategoryModel } from "../../models/entities/category.model"
 import { ChangeEvent } from "react"
-import { MainInput } from "../MainInput.component"
+import { MainInput } from "../inputs/MainInput.component"
 import { CardControl } from "../card-control.component"
 import { useGetBrandsQuery } from "../../api/brandApi"
 import { useGetLabelsQuery } from "../../api/labelApi"
+import { ProductFormModel } from "../../models/forms/product-form.model"
+import { productFormInitData } from "../../data/initial-data/forms/product-form.init"
+import { characteristicFormInitData } from "../../data/initial-data/forms/characteristic-form.init"
 
-
-export interface ProductFormData {
-    title: string
-    name: string
-    model: string
-    discription: string
-    status: string
-    categoryId: number | null
-    labelId: number | null
-    brandId: number | null
-    price: number | undefined
-    images: FileList | null
-    characteristics: CharacteristicFormData[]
-}
-
-interface CharacteristicFormData {
-    name: string
-    value: string
-    unit: string
-}
-
-const initCharacteristic = {
-    name: '',
-    value: '',
-    unit: ''
-}
-
-const initialValues: ProductFormData = {
-    title: '',
-    name: '',
-    model: '',
-    discription: '',
-    status: '',
-    categoryId: null,
-    labelId: null,
-    brandId: null,
-    price: undefined,
-    images: null,
-    characteristics: []
-}
 
 interface ProductFormProps {
     name: string
-    onSubmit: (form: ProductFormData) => void
+    onSubmit: (form: ProductFormModel) => void
 }
 
 export const ProductForm = ({
@@ -65,7 +28,7 @@ export const ProductForm = ({
     const {open, close, status} = useModal()
 
     const {values, handleChange, handleSubmit, setFieldValue} = useFormik({
-        initialValues,
+        initialValues: productFormInitData,
         onSubmit: (form) => {
             
             onSubmit({...form, labelId: form.labelId && +form.labelId, brandId: form.brandId && +form.brandId})
@@ -77,7 +40,7 @@ export const ProductForm = ({
     }
 
     const handleAddItem = () => {
-        setFieldValue('characteristics', [initCharacteristic, ...values.characteristics])
+        setFieldValue('characteristics', [characteristicFormInitData, ...values.characteristics])
     }
 
     const handleChangeCategory = (category: CategoryModel | null) => {

@@ -1,10 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { mainApi } from "../api/createApi";
+import basketReducer from './slices/basket.slice'
 import modalReducer from '../store/slices/modal.slice'
+import userReducer from '../store/slices/user.slice'
 
 export const store = configureStore({
   reducer: {
+    basketReducer,
     modalReducer,
+    userReducer,
     [mainApi.reducerPath]: mainApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>

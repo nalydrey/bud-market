@@ -1,24 +1,34 @@
 import { Bars3Icon } from "@heroicons/react/20/solid"
-import { Button } from "../components/Button.component"
+import { Button } from "../components/buttons/Button.component"
 import { navigation } from "../data/navigation"
-import {Input} from "../components/Input.component"
+import {Input} from "../components/inputs/Input.component"
 import { CategoryList } from "../components/CategoryList.component"
-import { MouseEvent, useEffect, useState } from "react"
+import { ChangeEvent, MouseEvent, useEffect, useState } from "react"
 // import { categories } from "../data/categories"
 import { CategoryModel } from "../models/entities/category.model"
+import { SearchProductPreview } from "../components/search-product-preview.component"
+import { useDebounceCallback, useDebounceValue } from "usehooks-ts"
+import { ProductModel } from "../models/entities/product.model"
 
 interface SubHeaderProps {
     categories: CategoryModel[]
+    products: ProductModel[]
+    onDebounce?: (str: string) => void
 }
 
 export const SubHeader = ({
-    categories
+    categories,
+    products,
+    onDebounce
 }: SubHeaderProps) => {
 
     const [isOpen, setOpen] = useState<boolean>(false)
     const [sublist, setSublist] = useState<CategoryModel[]>([])
     const [activeElem, setActiveElement] = useState<string>('')
+    const [searchString, setSearchString] = useState<string>('')
 
+    const debounced = useDebounceCallback(onDebounce ? onDebounce : () => {}, 500)
+    
     useEffect(()=>{
         document.addEventListener('click', closeCatalog)
         return () => {
@@ -45,6 +55,10 @@ export const SubHeader = ({
         setSublist([])
     }
 
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setSearchString(e.target.value)
+        debounced(e.target.value)
+    }
 
     return (
         <header className=" bg-black text-white">
@@ -61,7 +75,28 @@ export const SubHeader = ({
                         ))}
                     </ul>
                 </nav>
-                <Input/>
+                <div className="relative">
+                    <Input
+                        value={searchString}
+                        onChange={handleChange}
+                    />    
+                    <div className="absolute z-20 top-[110%] right-0 bg-white  text-black shadow-xl min-w-[500px]">
+                        {
+                            products.map(product => {
+                                const {title, images, priceHistory} = product
+                                return (
+                                    <SearchProductPreview
+                                        title={title}
+                                        src={'http://localhost:3030/' + images[0].fileName}
+                                        price={priceHistory[0].value}
+                                    />
+                                )
+                            })
+                            
+                        }
+                         
+                    </div>        
+                </div>
                 {
                     isOpen &&
                     <CategoryList

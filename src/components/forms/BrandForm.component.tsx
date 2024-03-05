@@ -1,29 +1,20 @@
 import { useFormik } from "formik"
-import { MainInput } from "../MainInput.component"
+import { MainInput } from "../inputs/MainInput.component"
 import { ChangeEvent, useEffect, useState } from "react"
 import { SERVER_PATH } from "../../constants/server"
 import { BrandModel } from "../../models/entities/brand.model"
 import { FileDashedButton } from "../file-dashed-button.component"
-import { FormButton } from "../FormButton.componet"
+import { FormButton } from "../buttons/FormButton.componet"
+import { BrandFormModel } from "../../models/forms/brand-form.model"
+import { brandFormInitData } from "../../data/initial-data/forms/brand-form.init"
 
-export interface IBrandForm {
-    name: string
-    logoImg: File | null
-}
-
- const initialValues: IBrandForm = {
-    name: '',
-    logoImg: null
-}
 
 interface BrandFormProps {
     editData?: BrandModel | null
     name?: string
-    onSubmit: (form: IBrandForm) => void
+    onSubmit: (form: BrandFormModel) => void
     onClose?: (name: string) => void
 }
-
-
 
 export const BrandForm = ({
     editData,
@@ -33,7 +24,7 @@ export const BrandForm = ({
     const [url, setUrl] = useState<string>('')
 
     const {values, handleChange, handleSubmit, setFieldValue} = useFormik({
-        initialValues,
+        initialValues: brandFormInitData,
         onSubmit: (form) => {
             onSubmit(form)
         }

@@ -11,6 +11,7 @@ interface ModalProviderItem {
 
 
 interface ModalProviderProps {
+    className?: string
     isLoading?: boolean
     openedList: string[]
     children: JSX.Element | JSX.Element[]
@@ -19,6 +20,7 @@ interface ModalProviderProps {
 }
 
 export const ModalProvider = ({
+    className,
     openedList,
     isLoading,
     children,
@@ -66,6 +68,7 @@ export const ModalProvider = ({
                 state.map((item) => {
                     return (
                         <ModalWindow
+                            className={`${className}`}
                             open = {item.open}
                             onClickEmptySpace={() => handleClickEmptySpace(item.name)}
                         >

@@ -1,15 +1,22 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Layout } from "../Layuot/layout.component";
-import { HomePage } from "../pages/home-page.component";
-import { AdminPage } from "../pages/admin-page.component";
-import { BrandPage } from "../pages/brand-page";
-import { AdminHomePage } from "../pages/admin-home-page";
-import { LabelsPage } from "../pages/labels-page.component";
-import { CategoriesPage } from "../pages/categories-page.component";
-import { ProductsPage } from "../pages/admin/products-page.component";
-import { CatalogHomePage } from "../pages/catalog/catalog-index.component";
+import { Layout } from "../pages";
+import { HomePage } from "../pages/home";
+import { AdminPage } from "../pages/admin";
+import { BrandPage } from "../pages/admin/brands";
+import { AdminHomePage } from "../pages/admin/home/index";
+import { LabelsPage } from "../pages/admin/labels";
+import { CategoriesPage } from "../pages/admin/categories";
+import { ProductsPage } from "../pages/admin/products";
+import { CatalogHomePage } from "../pages/catalog";
 import { SelfCatalogPage } from "../pages/catalog/level_one/SelfCatalogPage.component";
 import { RootCatalogPage } from "../pages/catalog/level_one/root-catalog.component";
+import { SingleProductPage } from "../pages/product/single-product-page";
+import { BasketPage } from "../pages/basket";
+import { OrderPage } from "../pages/order";
+import { AdminOrderPage } from "../pages/admin/orders";
+import { AdminUsersPage } from "../pages/admin/users";
+import { AdminFavoritePage } from "../pages/admin/favorite";
+import { ComparePage } from "../pages/compare";
 
 export const router = createBrowserRouter([
     {
@@ -19,6 +26,10 @@ export const router = createBrowserRouter([
         {
           index: true,
           element: <HomePage/>
+        },
+        {
+          path: '/basket',
+          element: <BasketPage/>
         },
         {
           path: '/admin',
@@ -44,7 +55,27 @@ export const router = createBrowserRouter([
               path: 'products',
               element: <ProductsPage/>
             },
+            {
+              path: 'orders',
+              element: <AdminOrderPage/>
+            },
+            {
+              path: 'users',
+              element: <AdminUsersPage/>
+            },
+            {
+              path: 'favorite',
+              element: <AdminFavoritePage/>
+            },
           ]
+        },
+        {
+          path: '/order',
+          element: <OrderPage/>
+        },
+        {
+          path: '/compare',
+          element: <ComparePage/>
         },
         {
           path: '/catalog',
@@ -60,6 +91,10 @@ export const router = createBrowserRouter([
             },
           ]
         },
+        {
+          path: '/product/:productId',
+          element: <SingleProductPage/>
+        }
         // {
         //   path: '/catalog/:categoryName',
         //   element: <SelfCatalogPage/>

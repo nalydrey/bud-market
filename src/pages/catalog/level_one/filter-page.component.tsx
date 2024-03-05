@@ -1,24 +1,26 @@
 import { FilterItem } from "../../../components/filter-item.component"
-import { ProductQueryBuilderDto } from "../../../models/dto/queryBuilder-product.dto"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
-import { ProductCard } from "../../../components/Card.component"
+import { ProductCard } from "../../../components/cards/Card.component"
 import { transformStatus } from "../../../features/transform-status.func"
 import { BrandModel } from "../../../models/entities/brand.model"
 import { RangeSlider } from "../../../components/range-slider.component"
 import { useGetBrandsQuery } from "../../../api/brandApi"
 import { useGetProductsQuery } from "../../../api/productApi"
+import { useGetCharacteristicsGroupQuery } from "../../../api/characteristicApi"
+import { FilterMenuItem } from "../../../components/filter-menu-item.component"
+import { QueryBuilderCharacteristic } from "../../../models/dto/queryBuilder-characteristic.model"
 
 export const FilterPage = () => {
 
     const params = useParams()
     const [brandIdList, setBrandList] = useState<number[]>([])
     const [finalRange, setFinalRange] = useState<[number, number]>([0, 10000])
-    
-    const [query, setQuery] = useState<ProductQueryBuilderDto>({page: 0, filter: {category: {systemName: params.categoryName}}})
+    const [characteristics, setCharacteristics] = useState<QueryBuilderCharacteristic[]>([])
 
     const {data:brands, isSuccess: isBrandsSuccess} = useGetBrandsQuery({filter:{products: {category: {systemName: params.categoryName}}}})
 
+    
     const {data: products, isSuccess} = useGetProductsQuery({
         page: 0,
         filter: {
@@ -26,15 +28,13 @@ export const FilterPage = () => {
             brand: {
                 id: brandIdList
             },
-            price: finalRange
-
+            price: finalRange,
+            characteristics: characteristics
         }
     })
-    console.log(brands);
     
 
-    console.log(data);
-    console.log(params.categoryName);
+    const {data: characteristicGroups, isSuccess: isSuccessCharacteristicGroups} = useGetCharacteristicsGroupQuery(params.categoryName || '')
 
     const handleClickBrand = (brand: BrandModel) => {
         const set = new Set(brandIdList)
@@ -46,13 +46,34 @@ export const FilterPage = () => {
         setBrandList(Array.from(set))
     }
     
-    
-
 
       const handleMouseUp = (event: Event | React.SyntheticEvent<Element, Event>, value: number | number[]) => {
         if(Array.isArray(value) && value.length === 2)
         setFinalRange([value[0], value[1]])
       }
+
+      const handleClickCharacteristic = (characteristic: QueryBuilderCharacteristic) => {
+        const isExist = characteristics.some(item => {
+            return Object.entries(item).every(field => {
+                const key = field[0] as keyof QueryBuilderCharacteristic
+                return characteristic[key] === field[1]
+            })
+        })
+        console.log('exist', isExist);
+        if(!isExist) return setCharacteristics([...characteristics, characteristic])
+
+        const filterArr = characteristics.filter(item => {
+            return !Object.entries(item).every(field => {
+                const key = field[0] as keyof QueryBuilderCharacteristic
+                return characteristic[key] === field[1]
+            })
+        })
+        setCharacteristics(filterArr)
+      }
+
+console.log(characteristics);
+
+      
     return (
         <div className="flex gap-5">
             <div className="max-w-[310px] w-full border flex flex-col ">
@@ -66,16 +87,11 @@ export const FilterPage = () => {
                                     const isChanged = brandIdList.includes(brand.id)
                                     return (
                                         <li>
-                                            <button 
-                                                className="flex items-center gap-5"
-                                                onClick = {() => handleClickBrand(brand)}
-                                            >
-                                                <span 
-                                                    className={`w-5 h-5 rounded-sm shadow-xl ${isChanged ? 'bg-orange-primary': 'bg-gray-secondary'}`}
-                                                    
-                                                />
-                                                <span>{brand.name}</span>
-                                            </button>
+                                            <FilterMenuItem
+                                                isChanged = {isChanged}
+                                                label={brand.name}
+                                                onClick={() => handleClickBrand(brand)}
+                                            />
                                         </li>
                                     )
                                 })
@@ -89,6 +105,35 @@ export const FilterPage = () => {
                             max={1000}
                         />
                     </FilterItem>
+                    {
+                        isSuccessCharacteristicGroups &&
+                        characteristicGroups.map(group => (
+                            <FilterItem
+                                title={group.name}
+                            >
+                                <ul className="p-3 text-white flex flex-col gap-2">
+                                    {
+                                        group.payload.map(item => {
+                                            const isChanged = characteristics.some(elem => {
+                                                return (elem.name === group.name &&
+                                                elem.unit === item.unit &&
+                                                elem.value === item.value)
+                                            })
+                                            return (
+                                            <li>
+                                                <FilterMenuItem
+                                                    isChanged = {isChanged}
+                                                    label={`${item.value} ${item.unit ? item.unit : ''}`}
+                                                    onClick={() => handleClickCharacteristic({name: group.name, ...item})}
+                                                />
+                                            </li>
+                                        )
+                                        })
+                                    }
+                                </ul>
+                            </FilterItem>
+                                ))
+                    }
             </div>
             <div className="border w-full grid grid-cols-3 gap-5">
                 {

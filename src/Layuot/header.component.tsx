@@ -1,10 +1,13 @@
-import { UserButton } from '../components/UserButton.component'
+import { Menu, MenuItem } from '@mui/material'
+import { UserButton } from '../components/buttons/UserButton.component'
 import { BasketIcon } from '../components/icons/BasketIcon'
 import { FavoriteIcon } from '../components/icons/FavoriteIcon'
 import { LogoIcon } from '../components/icons/LogoIcon'
 import { StatisticIcon } from '../components/icons/StatisticIcon'
 import { UserIcon } from '../components/icons/UserIcon'
 import { companyInfo } from '../data/companyInfo'
+import { MouseEvent, useState } from 'react'
+import { useUser } from '../hooks/useUser'
 
 
 interface HeaderProps {
@@ -13,11 +16,11 @@ interface HeaderProps {
     basketCounter?: number
     totalPrice?: number
     onClickFavourite?: ()=>void
-    onClickStatistic?: ()=>void
-    onClickUser?: ()=>void
+    onClickCompare?: ()=>void
     onClickBasket?: ()=>void
     onClickCallback?: ()=>void
     onClickLogo?:()=>void
+    onClickMenuItem?: (name: string) => void
 }
 
 
@@ -30,11 +33,30 @@ export const Header = ({
     onClickBasket,
     onClickCallback,
     onClickFavourite,
-    onClickStatistic,
-    onClickUser
+    onClickCompare,
+    onClickMenuItem
+    
 }: HeaderProps) => {
+
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const {user} = useUser()
+
+    const handleClickUser = (e: MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(e.currentTarget)
+    }
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    }
+
+    
+    const handleClickMenuItem= (name: string) => {
+        onClickMenuItem && onClickMenuItem(name)
+        setAnchorEl(null);
+    }
+
     return (
-        <header className=' bg-gray-dark font-raleway text-white'>
+        <header className='bg-gray-dark font-raleway text-white'>
             <div className='container mx-auto flex gap-5 items-center justify-between'>
                 <LogoIcon
                     onClick={onClickLogo}
@@ -58,12 +80,34 @@ export const Header = ({
                     <UserButton
                        icon={<StatisticIcon/>}
                        countValue={statisticCounter}
-                       onClick={onClickStatistic}
+                       onClick={onClickCompare}
                     />
                     <UserButton
                        icon={<UserIcon/>}
-                       onClick={onClickUser}
+                       onClick={handleClickUser}
                     />
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={!!anchorEl}
+                        onClose={handleClose}
+                        MenuListProps={{
+                        'aria-labelledby': 'basic-button',
+                        }}
+                    >   {
+                        !user 
+                        ?
+                        <>
+                            <MenuItem onClick={() => handleClickMenuItem('register')}>Реєстрація</MenuItem>
+                            <MenuItem onClick={() => handleClickMenuItem('login')}>Вхід</MenuItem>
+                        </>
+                        :
+                        <>
+                            <MenuItem onClick={() => handleClickMenuItem('office')}>Перейти у кабінет</MenuItem>
+                            <MenuItem onClick={() => handleClickMenuItem('exit')}>Вихід</MenuItem>
+                        </>
+                         }
+                    </Menu>
                     <UserButton
                        icon={<BasketIcon className="w-8 stroke-white"/>}
                        countValue={basketCounter}
