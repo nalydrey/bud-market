@@ -1,5 +1,5 @@
 import { useDeleteProductMutation, useGetProductsQuery } from "../../../api/productApi";
-import { ProductCard } from "../../../components/cards/Card.component";
+import { ProductCard } from "../../../components/cards/product_card.component";
 import { transformStatus } from "../../../features/transform-status.func";
 
 
@@ -21,7 +21,6 @@ export const ProductsPage = () => {
             {
                 isSuccess && products.map(product => {
                     const {id, priceHistory, label, title, images, status} = product
-                    console.log();
                     
                     return (
                         <ProductCard

@@ -1,5 +1,4 @@
 import { queryString } from "object-query-string";
-import { CreateProductDto } from "../models/dto/create-product.dto";
 import { ProductQueryBuilderDto } from "../models/dto/queryBuilder-product.dto";
 import { ProductResponce } from "../models/response/product-responce.model";
 import { ProductsResponce } from "../models/response/products-responce.model";
@@ -10,7 +9,7 @@ import { ProductModel } from "../models/entities/product.model";
 export const productApiSlice = mainApi.injectEndpoints({
     endpoints: builder => ({
 
-        createProduct: builder.mutation<ProductModel[], CreateProductDto>({
+        createProduct: builder.mutation<ProductModel[], FormData>({
             invalidatesTags: ['Products'],
             query: (body) => ({
                url: '/products',
@@ -53,5 +52,6 @@ export const {
     useCreateProductMutation,
     useDeleteProductMutation,
     useGetProductsQuery,
-    useGetProductQuery
+    useGetProductQuery,
+    internalActions
 } = productApiSlice

@@ -1,4 +1,3 @@
-import { SerializedError } from "@reduxjs/toolkit"
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query"
 
 export const isFetchBaseQueryError = (error: object): error is FetchBaseQueryError   => {

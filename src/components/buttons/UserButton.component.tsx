@@ -1,6 +1,5 @@
 import { MouseEvent } from "react"
 import { Counter } from "../Counter.component"
-import { FavoriteIcon } from "../icons/FavoriteIcon"
 
 interface UserButtonProps {
     icon: JSX.Element

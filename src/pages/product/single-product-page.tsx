@@ -36,7 +36,6 @@ export const SingleProductPage = () => {
     const {data: product, isSuccess} = useGetProductQuery(params.productId ?? skipToken)
     const {addToBasket} = useBasket()
 
-    console.log(product);
     
     const status = {
         color: '#FFF',

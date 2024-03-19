@@ -1,4 +1,4 @@
-interface BrandQueryBuilder {
+export interface BrandQueryBuilder {
     filter?: {
         products?: {
             category?: {

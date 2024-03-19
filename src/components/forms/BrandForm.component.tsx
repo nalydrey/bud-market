@@ -1,12 +1,12 @@
 import { useFormik } from "formik"
-import { MainInput } from "../inputs/MainInput.component"
 import { ChangeEvent, useEffect, useState } from "react"
 import { SERVER_PATH } from "../../constants/server"
 import { BrandModel } from "../../models/entities/brand.model"
 import { FileDashedButton } from "../file-dashed-button.component"
-import { FormButton } from "../buttons/FormButton.componet"
 import { BrandFormModel } from "../../models/forms/brand-form.model"
 import { brandFormInitData } from "../../data/initial-data/forms/brand-form.init"
+import { MUITextField } from "../inputs/MUITextField.component"
+import { Button } from "@mui/material"
 
 
 interface BrandFormProps {
@@ -40,8 +40,6 @@ export const BrandForm = ({
 
 
     const handleChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
-        console.log('!');
-        
         if(e.target.files){
             const fakeUrl = URL.createObjectURL(e.target.files[0])
             setUrl(fakeUrl)
@@ -56,9 +54,9 @@ export const BrandForm = ({
                 action=""
                 onSubmit={handleSubmit}
             >
-                <MainInput
+                <MUITextField
                     name="name"
-                    title="Назва бренду"
+                    label="Назва бренду"
                     value={values.name}
                     onChange={handleChange}
                 />
@@ -67,9 +65,12 @@ export const BrandForm = ({
                     url={url}
                     onChange={handleChangeFile}
                 />
-                <FormButton
-                    title="Зберегти"
-                />
+                <Button 
+                    variant="contained"
+                    type="submit"
+                >
+                    Відправити
+                </Button>
             </form>
     )
 }

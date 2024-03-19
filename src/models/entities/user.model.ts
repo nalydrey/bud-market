@@ -1,3 +1,4 @@
+import { OrderItem } from "./order-item.model"
 import { OrderModel } from "./order.model"
 import { ProductModel } from "./product.model"
 
@@ -14,4 +15,5 @@ export interface UserModel {
     orders: OrderModel
     createdDate: Date
     updatedDate: Date
+    basket: OrderItem[]
 }

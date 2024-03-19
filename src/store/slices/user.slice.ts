@@ -1,13 +1,14 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { UserModel } from "../../models/entities/user.model"
-import { LoginFormModel } from "../../components/forms/LoginForm.component"
 
 interface UserSliceModel {
-    accessData: LoginFormModel | null
+    user: UserModel | null
+    token: string | null
 }
 
 const initialState: UserSliceModel = {
-    accessData: null
+    user: null,
+    token: null
 }
 
 
@@ -15,18 +16,22 @@ const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        enter: (state, action: PayloadAction<LoginFormModel>) => {
-            state.accessData = action.payload
+        enter: (state, action: PayloadAction<UserModel>) => {
+            state.user = action.payload
         },
         exit: (state) => {
-            state.accessData = null
+            state.user = null
+        },
+        setToken: (state, action: PayloadAction<string | null>) => {
+            state.token = action.payload
         }
     }
 })
 
 export const {
     enter,
-    exit
+    exit,
+    setToken
 } = userSlice.actions
 
 export default userSlice.reducer

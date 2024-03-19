@@ -1,48 +1,56 @@
 import { ChartBarIcon } from '@heroicons/react/24/solid'
 import { IconButton } from '../buttons/IconButton.component'
 import { CheckIcon, HeartIcon } from '@heroicons/react/24/outline'
-import { OutlinedSvgButton } from '../buttons/OutlinedSvgButton.component'
-import { MouseEvent, useState } from 'react'
+import { BuyButton } from '../buttons/buy_button.component'
+import { useState } from 'react'
 import { CardControl } from '../card-control.component'
+import { ProductModel } from '../../models/entities/product.model'
+import { transformStatus } from '../../features/transform-status.func'
 
-interface Label {
-    title: string
-    color: string
-}
 
 interface ProductCardProps {
     isLoading?: boolean
-    onCompare?: (e: MouseEvent<HTMLButtonElement>) => void
-    onFavorite?: (e: MouseEvent<HTMLButtonElement>) => void
-    onDelete?: (e: MouseEvent<HTMLButtonElement>) => void
-    onEdit?: (e: MouseEvent<HTMLButtonElement>) => void
-    onClickCard?: (e: MouseEvent) => void
+    onBasket?: (product: ProductModel) => void
+    onCompare?: (product: ProductModel) => void
+    onFavorite?: (product: ProductModel) => void
+    onDelete?: (product: ProductModel) => void
+    onEdit?: (product: ProductModel) => void
+    onClickCard?: (product: ProductModel) => void
+    isCompared?: boolean
     isFavorite?: boolean
-    src: string[]
-    label?: Label | null
-    title: string
-    price: number
-    oldPrice?: number
+    isInBasket?: boolean
+    loadingBasket?: boolean
     union?: string
-    status?: Label
+    product: ProductModel
+    control?: boolean
 }
 
 export const ProductCard = ({
+    onBasket,
     onDelete,
     onEdit,
     onCompare,
     onFavorite,
     onClickCard,
-    isLoading,
+    isInBasket,
+    loadingBasket,
+    product,
+    isCompared,
     isFavorite,
-    src,
-    label,
-    title,
-    price,
-    oldPrice,
-    status,
+    isLoading,
+    control,
     union = '₴'
 }: ProductCardProps) => {
+
+    const {label, images, title, priceHistory, status} = product
+
+    const src = images.map(img => img.fileName)
+    const price = priceHistory[0].value
+    const oldPrice = priceHistory[1] ? priceHistory[1].value : undefined
+
+    const stat = transformStatus(status)
+
+    
 
     const [number, setNumber] = useState<number>(0)
 
@@ -54,12 +62,12 @@ export const ProductCard = ({
         <div className=' relative rounded-sm max-w-[310px] border p-3 pb-0 w-full flex flex-col gap-1'>
             <div className='flex justify-end gap-1'>
                 <IconButton
-                    icon = {<ChartBarIcon className= ' text-gray-secondary'/>}
-                    onClick={onCompare}
+                    icon = {<ChartBarIcon className= {` ${isCompared ? 'text-blue-400' : 'text-gray-secondary'}`}/>}
+                    onClick={() => {onCompare && onCompare(product)} }
                 />
                 <IconButton
                     icon = {<HeartIcon className= {`${isFavorite ? 'text-red-500 fill-red-300' : 'text-gray-secondary'}`}/>}
-                    onClick={onFavorite}
+                    onClick={() => onFavorite && onFavorite(product)}
                 />
             </div>
             {/*------------------- Slider -----------------------*/}
@@ -84,7 +92,7 @@ export const ProductCard = ({
             <div className='pr-14 mt-3 min-h-[60px]'>
                 <h3 
                     className=' font-semibold hover:underline cursor-pointer'
-                    onClick={onClickCard}
+                    onClick={() => {onClickCard && onClickCard(product)}}
                 >{title}</h3>
                 <div className='flex justify-between items-center'>
                     <div className='flex gap-2'>
@@ -97,16 +105,19 @@ export const ProductCard = ({
                         status &&
                         <div 
                             className='flex items-end gap-1 text-green-600'
-                            style={{color: status.color}}
+                            style={{color: stat.color}}
                         >
                             <CheckIcon className='w-4 h-4'/>
-                            <span className='text-sm'>{status.title}</span>
+                            <span className='text-sm'>{stat.title}</span>
                         </div>
                     }
                 </div>
             
-                <OutlinedSvgButton
+                <BuyButton
+                    active = {isInBasket}
+                    loading = {loadingBasket}
                     className='absolute right-0 bottom-0'
+                    onClick={() => {onBasket && onBasket(product)}}
                 />
             </div>
             {
@@ -115,14 +126,17 @@ export const ProductCard = ({
                     className={`absolute top-3 left-3 text-white py-1 px-2  text-sm`}
                     style={{background: label.color}}
                 >
-                    {label.title}
+                    {label.name}
                 </div>
             }
-            <CardControl
-                className='absolute top-0 right-0 translate-x-1/3 -translate-y-1/2'
-                onDelete={onDelete}
-                onEdit={onEdit}
-            />
+            {
+                control &&
+                <CardControl
+                    className='absolute top-0 right-0 translate-x-1/3 -translate-y-1/2'
+                    onDelete={() => {onDelete && onDelete(product)}}
+                    onEdit={() => {onEdit && onEdit(product)}}
+                />
+            }
             {isLoading && <div className='absolute bg-white/50 w-full h-full'/>}
         </div>
     )

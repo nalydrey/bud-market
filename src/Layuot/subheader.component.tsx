@@ -7,7 +7,7 @@ import { ChangeEvent, MouseEvent, useEffect, useState } from "react"
 // import { categories } from "../data/categories"
 import { CategoryModel } from "../models/entities/category.model"
 import { SearchProductPreview } from "../components/search-product-preview.component"
-import { useDebounceCallback, useDebounceValue } from "usehooks-ts"
+import { useDebounceCallback } from "usehooks-ts"
 import { ProductModel } from "../models/entities/product.model"
 
 interface SubHeaderProps {
@@ -50,7 +50,7 @@ export const SubHeader = ({
         setSublist(item.children)
     }
 
-    const handleMouseLeave = (e: MouseEvent<HTMLDivElement>) => {
+    const handleMouseLeave = () => {
         setActiveElement('')
         setSublist([])
     }

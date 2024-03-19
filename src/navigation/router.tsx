@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Layout } from "../pages";
+import { IndexPage } from "../pages";
 import { HomePage } from "../pages/home";
 import { AdminPage } from "../pages/admin";
 import { BrandPage } from "../pages/admin/brands";
@@ -17,11 +17,16 @@ import { AdminOrderPage } from "../pages/admin/orders";
 import { AdminUsersPage } from "../pages/admin/users";
 import { AdminFavoritePage } from "../pages/admin/favorite";
 import { ComparePage } from "../pages/compare";
+import { UserPage } from "../pages/user";
+import { UserOrderPage } from "../pages/user/orders";
+import { FavoritePage } from "../pages/favorites";
+import { TestPage } from "../pages/TestPage";
+import { ThankPage } from "../pages/thank";
 
 export const router = createBrowserRouter([
     {
       path: "/",
-      element: <Layout/>,
+      element: <IndexPage/>,
       children: [
         {
           index: true,
@@ -30,6 +35,24 @@ export const router = createBrowserRouter([
         {
           path: '/basket',
           element: <BasketPage/>
+        },
+        {
+          path: '/thank',
+          element: <ThankPage/>
+        },
+        {
+          path: '/user',
+          element: <UserPage/>,
+          children: [
+            {
+              path: 'orders',
+              element: <UserOrderPage/>
+            }
+          ]
+        },
+        {
+          path: '/favorites',
+          element: <FavoritePage/>
         },
         {
           path: '/admin',
@@ -102,3 +125,10 @@ export const router = createBrowserRouter([
       ]
     },
   ]);
+
+  export const testRouter = createBrowserRouter([
+  {
+    path: '/',
+    element: <TestPage/>
+  }
+]) 

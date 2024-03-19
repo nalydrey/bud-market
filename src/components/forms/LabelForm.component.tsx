@@ -1,8 +1,8 @@
 import { useFormik } from "formik"
-import { MainInput } from "../inputs/MainInput.component"
-import { FormButton } from "../buttons/FormButton.componet"
 import { LabelFormModel } from "../../models/forms/label-form.model"
 import { labelFormInitData } from "../../data/initial-data/forms/label-form.init"
+import { MUITextField } from "../inputs/MUITextField.component"
+import { Button } from "@mui/material"
 
 
 interface LabelFormProps {
@@ -11,7 +11,6 @@ interface LabelFormProps {
 }
 
 export const LabelForm = ({
-    name,
     onSubmit
 }: LabelFormProps) => {
 
@@ -29,9 +28,9 @@ export const LabelForm = ({
             className="flex flex-col gap-2"
             onSubmit={handleSubmit}
         >
-            <MainInput
+            <MUITextField
                 name="name"
-                title="Назва мітки"
+                label="Назва мітки"
                 value={values.name}
                 onChange={handleChange}
             />
@@ -47,9 +46,12 @@ export const LabelForm = ({
                 />
                 <span className="font-bold">Оберіть колір</span>
             </label>
-            <FormButton
-                title="Зберегти"
-            />
+            <Button 
+                variant="contained"
+                type="submit"
+            >
+                Відправити
+            </Button>
         </form>
     )
 }

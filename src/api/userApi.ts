@@ -3,19 +3,27 @@ import { CreateUserDto } from "../models/dto/create-user.dto";
 import { UserModel } from "../models/entities/user.model";
 import { UsersResponce } from "../models/response/users-responce.model";
 import { mainApi } from "./createApi";
-import { UserResponce } from "../models/response/user-responce.model";
 import { ChangeFavoriteDto } from "../models/dto/change-favorite.dto";
 import { ChangeCompareDto } from "../models/dto/change-compare.dto";
-
+import { LoginResponce } from "../models/response/login-responce.model";
 
 export const userApiSlice = mainApi.injectEndpoints({
     endpoints: (builder) => ({
         getUsers: builder.query<UserModel[], undefined>({
+            providesTags: ['Users'],
             query: () => '/users',
             transformResponse: (responce: UsersResponce) => responce.users 
         }),
 
-        createUser: builder.mutation<UserModel, CreateUserDto>({
+        deleteUser: builder.mutation<UserModel, number>({
+            invalidatesTags: ['Users'],
+            query: (id) => ({
+                url: `/users/${id}`,
+                method: 'DELETE',
+            })
+        }),
+
+        registerUser: builder.mutation<UserModel, CreateUserDto>({
             query: (body) => ({
                 url: '/users/register',
                 method: 'POST',
@@ -23,18 +31,41 @@ export const userApiSlice = mainApi.injectEndpoints({
             })
         }),
        
-        loginUser: builder.query<UserModel, LoginDto | null>({
-            providesTags: ['Users'],
+        loginUser: builder.mutation<string, LoginDto>({
+            invalidatesTags: ['User'],
             query: (loginDto) => {
-
-                const qs = loginDto ? queryString(loginDto): ''
-                return `/users/login?${qs}`
+                const qs =queryString(loginDto)
+                return ({
+                    url: `/users/login?${qs}`,
+                    method: 'GET'
+                }) 
             },
-            transformResponse: (responce: UserResponce) => responce.user 
+            transformResponse: (responce: LoginResponce) => responce.token 
+        }),
+
+        enterByToken: builder.query<UserModel | null, string | null>({
+            providesTags: ['User'],
+            queryFn: async (token) => {
+                if(token){
+                    
+                    const response = await fetch('http://localhost:3030/api/users/enter', {
+                        method: 'GET',
+                        headers: {'authorization': `Bearer ${token}`}
+                    });
+                    const json = await response.json();
+                    
+                    return {
+                        data: json.user
+                    }
+                }
+                return {
+                    data: null
+                }
+            },
         }),
 
         changeFavorites: builder.mutation<{message: string}, ChangeFavoriteDto>({
-            invalidatesTags: ['Users'],
+            invalidatesTags: ['User'],
             query: (body) => ({
                 url: '/users/favorite',
                 method: 'PUT',
@@ -43,7 +74,7 @@ export const userApiSlice = mainApi.injectEndpoints({
         }),
 
         changeCompare: builder.mutation<{message: string}, ChangeCompareDto>({
-            invalidatesTags: ['Users', 'Products', 'Characteristics'],
+            invalidatesTags: ['User', 'Products', 'Characteristics'],
             query: (body) => ({
                 url: '/users/compare',
                 method: 'PUT',
@@ -56,9 +87,13 @@ export const userApiSlice = mainApi.injectEndpoints({
     
 
 export const {
+    useEnterByTokenQuery,
     useGetUsersQuery,
-    useCreateUserMutation,
-    useLoginUserQuery,
+    useLoginUserMutation,
+    useRegisterUserMutation,
     useChangeFavoritesMutation,
-    useChangeCompareMutation
+    useChangeCompareMutation,
+    useDeleteUserMutation,
 } = userApiSlice
+
+

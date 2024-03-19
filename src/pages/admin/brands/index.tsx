@@ -1,20 +1,24 @@
 import { BrandCard } from "../../../components/cards/brand-card.component";
-import { SERVER_PATH } from "../../../constants/server";
 import { ModalProvider } from "../../../components/modal-provider.component";
-import { BrandForm, IBrandForm } from "../../../components/forms/BrandForm.component";
+import { BrandForm } from "../../../components/forms/BrandForm.component";
 import { useState } from "react";
 import { BrandModel } from "../../../models/entities/brand.model";
 import { useDeleteBrandMutation, useEditBrandMutation, useGetBrandsQuery } from "../../../api/brandApi";
+import { BrandFormModel } from "../../../models/forms/brand-form.model";
+import { useInfo } from "../../../hooks/useInfo";
 
 
 export const BrandPage = () => {
 
     const {data: brands, isSuccess} = useGetBrandsQuery({})
-    const [deleteBrand] = useDeleteBrandMutation()
+    const [deleteBrand, {isSuccess: isDeleteSuccess, error: deleteError}] = useDeleteBrandMutation()
     const [editBrand] = useEditBrandMutation()
+
+
+    useInfo([{isSuccess: isDeleteSuccess, successMessage: 'Бренд видалено', error: deleteError}])
     
-    const handleDelete = (id: number) => {
-        deleteBrand(id)
+    const handleDelete = (brand: BrandModel) => {
+        deleteBrand(brand.id)
     }
 
     const [openState, setOpenState] = useState<string[]>([])
@@ -33,16 +37,13 @@ export const BrandPage = () => {
         setOpenState(Array.from(set))
     }
 
-    const handleSubmitBrandForm = (form: IBrandForm) => {
-        console.log(form);
-        
+    const handleSubmitBrandForm = (form: BrandFormModel) => {
         if(selectedBrand){
             const formData = new FormData()
             formData.append('name', form.name)
             form.logoImg && formData.append('file', form.logoImg)
             editBrand({id: selectedBrand.id, body: formData})
         }
-    
     }
 
     return (
@@ -52,8 +53,8 @@ export const BrandPage = () => {
                 brands.map((brand) => (
                     <BrandCard
                         key={brand.id}
-                        src={SERVER_PATH + brand.logoImg}
-                        onDelete={() => handleDelete(brand.id)}
+                        brand={brand}
+                        onDelete={handleDelete}
                         onEdit={() => handleOpenModal('brands', brand)}
                     />
                 ))

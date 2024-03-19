@@ -1,7 +1,7 @@
 import { MouseEvent } from "react"
 import defaultImg from '../../assets/images/Rectangle 20.png'
 import { XMarkIcon } from "@heroicons/react/24/outline"
-import { OutlinedSvgButton } from "../buttons/OutlinedSvgButton.component"
+import { BuyButton } from "../buttons/buy_button.component"
 
 interface CompareProductCardProps {
     title: string
@@ -18,7 +18,6 @@ export const CompareProductCard = ({
     price,
     src,
     union = '₴',
-    onClickBasket,
     onClickClose
 }: CompareProductCardProps) => {
     return (
@@ -35,7 +34,7 @@ export const CompareProductCard = ({
             <h3 className="grow">{title}</h3>
             <span>{price} {union}</span>
             {/* <button className="border p-1 absolute bottom-0 right-0">buy</button> */}
-            <OutlinedSvgButton
+            <BuyButton
                 className="absolute right-0 bottom-0"
             />
         </div>

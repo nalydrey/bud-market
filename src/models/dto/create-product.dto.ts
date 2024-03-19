@@ -6,9 +6,9 @@ export interface CreateProductDto {
     model: string
     discription: string
     status: string
-    categoryId: number
-    labelId: number
-    brandId: number
+    categoryId: number | null
+    labelId: number | null
+    brandId: number | null
     price: number
     images: number[]
     characteristics: CreateCharacteristicDto[]

@@ -3,9 +3,11 @@ import { mainApi } from "../api/createApi";
 import basketReducer from './slices/basket.slice'
 import modalReducer from '../store/slices/modal.slice'
 import userReducer from '../store/slices/user.slice'
+import infoReducer from '../store/slices/info.slice'
 
 export const store = configureStore({
   reducer: {
+    infoReducer,
     basketReducer,
     modalReducer,
     userReducer,

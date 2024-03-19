@@ -1,4 +1,4 @@
-import { ChangeEvent, HTMLInputTypeAttribute, InputHTMLAttributes } from "react"
+import { ChangeEvent, HTMLInputTypeAttribute } from "react"
 
 interface MainInputProps  {
     id?: string
@@ -11,7 +11,6 @@ interface MainInputProps  {
 }
 
 export const MainInput = ({
-    id,
     placeholder,
     type,
     value,

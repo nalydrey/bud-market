@@ -14,6 +14,8 @@ export const RootCatalogPage = () => {
         navigate(category.systemName)
     }
 
+    
+
     return (
         <CategoryContainer>
             {

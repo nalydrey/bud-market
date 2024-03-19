@@ -1,4 +1,43 @@
 import { Outlet, useNavigate } from "react-router-dom"
+import { SidePanelButton } from "../../components/buttons/SidePanelButton.component"
+import { NavButton } from "../../models/nav-button.model"
+
+
+const adminPages: NavButton[] = [
+    {
+        name: 'Керування',
+        path: '.'
+    },
+    {
+        name: 'Бренди',
+        path: 'brands'
+    },
+    {
+        name: 'Лейби',
+        path: 'labels'
+    },
+    {
+        name: 'Категорії',
+        path: 'categories'
+    },
+    {
+        name: 'Продукція',
+        path: 'products'
+    },
+    {
+        name: 'Замовлення',
+        path: 'orders'
+    },
+    {
+        name: 'Користувачі',
+        path: 'users'
+    },
+    {
+        name: 'Улюблені',
+        path: 'favorite'
+    },
+
+]
 
 export const AdminPage = () => {
 
@@ -12,43 +51,16 @@ export const AdminPage = () => {
     return (
         <section>
             <div className="container mx-auto">
-                <h1 className=" font-prosto text-4xl mb-8">Admin Panel</h1>
                 <div className="grid grid-cols-4 gap-5 ">
                     <div className=" bg-gray-dark text-white rounded-md">
-                        <button 
-                            className="p-4 hover:text-orange-primary border-b w-full text-start"
-                            onClick={() => handleNavigate('.')}
-                        >Керування</button>
-                        <button className="p-4 hover:text-orange-primary border-b w-full text-start">Створити товар</button>
-                        <button 
-                            className="p-4 hover:text-orange-primary border-b w-full text-start"
-                            onClick={() => handleNavigate('brands')}
-                        >Бренди</button>
-                        <button 
-                            className="p-4 hover:text-orange-primary border-b w-full text-start"
-                            onClick={() => handleNavigate('labels')}
-                        >Мітки</button>
-                        <button 
-                            className="p-4 hover:text-orange-primary border-b w-full text-start"
-                            onClick={() => handleNavigate('categories')}
-                        >Категорії</button>
-                        <button 
-                            className="p-4 hover:text-orange-primary border-b w-full text-start"
-                            onClick={() => handleNavigate('products')}
-                        >Продукція</button>
-                        <button 
-                            className="p-4 hover:text-orange-primary border-b w-full text-start"
-                            onClick={() => handleNavigate('orders')}
-                        >Замовлення</button>
-                        <button 
-                            className="p-4 hover:text-orange-primary border-b w-full text-start"
-                            onClick={() => handleNavigate('users')}
-                        >Користувачі</button>
-                        <button 
-                            className="p-4 hover:text-orange-primary border-b w-full text-start"
-                            onClick={() => handleNavigate('favorite')}
-                        >Улюблені</button>
-              
+                       {
+                        adminPages.map(page => (
+                            <SidePanelButton
+                                title={page.name}
+                                onClick={() => handleNavigate(page.path)}
+                            />
+                        ))
+                       }
                     </div>
                     <div className=" col-span-3">
                         <Outlet/>

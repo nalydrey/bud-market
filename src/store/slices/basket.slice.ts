@@ -25,7 +25,6 @@ export const basketSlice = createSlice({
                 state.totalPrice = action.meta.totalPrice
             },
             prepare: (payload: BasketItemModel[]) => {
-                console.log(payload);
                 const itemQty = payload.length
                 const totalPrice = payload.map(item => item.product.priceHistory[0].value*item.qty).reduce((summ, elem) => (summ + elem), 0)
                 return {
@@ -36,10 +35,11 @@ export const basketSlice = createSlice({
                     }
                 }
             },
-        }
+        },
+        initBasket: () => initialState
     }
 })
 
-export const { setItems } = basketSlice.actions
+export const { setItems, initBasket } = basketSlice.actions
 
 export default basketSlice.reducer

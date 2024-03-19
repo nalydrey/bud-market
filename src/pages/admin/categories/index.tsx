@@ -1,16 +1,22 @@
 import { useMemo, useState } from "react";
 import { CategoryItem } from "../../../components/category-item.component";
-import { CategoryForm, CategoryFormModel } from "../../../components/forms/CategoryForm.component";
 import { ModalWindow } from "../../../components/modal-window.component";
 import { CategoryModel } from "../../../models/entities/category.model";
 import { useModal } from "../../../hooks/useModal";
 import { useDeleteCategoryMutation, useGetTreeCategoriesQuery, useUpdateCategoryMutation } from "../../../api/categoryApi";
+import { CategoryFormModel } from "../../../models/forms/category-form.model";
+import { useInfo } from "../../../hooks/useInfo";
+import { CategoryForm } from "../../../components/forms/CategoryForm.component";
 
 export const CategoriesPage = () => {
 
     const {data: categories, isSuccess} = useGetTreeCategoriesQuery(undefined)
-    const [deleteCategory] = useDeleteCategoryMutation()
+    const [deleteCategory, {isSuccess: isSeccessDelete, error: deleteError}] = useDeleteCategoryMutation()
     const [editCategory] =  useUpdateCategoryMutation()
+
+    useInfo([
+        {isSuccess: isSeccessDelete, successMessage: 'Категорія видалена', error: deleteError }
+    ])
 
     const { status, close, open } = useModal()
     const [chosenCategory, setCategory] = useState<CategoryModel | null>(null)
@@ -20,9 +26,6 @@ export const CategoriesPage = () => {
         ?  {name: chosenCategory.name, parentId: null}
         :  null
     }, [chosenCategory])
-
-    console.log(editData);
-    
 
     const handleDelete = (category: CategoryModel) => {
         deleteCategory(category.id)

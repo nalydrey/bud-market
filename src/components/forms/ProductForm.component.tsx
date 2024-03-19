@@ -3,7 +3,7 @@ import { ModalWindow } from "../modal-window.component"
 import { CategorySelector } from "../CategorySelector.component"
 import { useModal } from "../../hooks/useModal"
 import { CategoryModel } from "../../models/entities/category.model"
-import { ChangeEvent } from "react"
+import { ChangeEvent, useState } from "react"
 import { MainInput } from "../inputs/MainInput.component"
 import { CardControl } from "../card-control.component"
 import { useGetBrandsQuery } from "../../api/brandApi"
@@ -11,6 +11,15 @@ import { useGetLabelsQuery } from "../../api/labelApi"
 import { ProductFormModel } from "../../models/forms/product-form.model"
 import { productFormInitData } from "../../data/initial-data/forms/product-form.init"
 import { characteristicFormInitData } from "../../data/initial-data/forms/characteristic-form.init"
+import { MUITextField } from "../inputs/MUITextField.component"
+import { Button, SelectChangeEvent } from "@mui/material"
+import { Fieldset } from "../fieldset.component"
+import { Selector } from "../select.component"
+import { BrandMenuItem } from "../menu-items/brand-menu-item.component"
+import { LabelMenuItem } from "../menu-items/label-menu-item.component"
+import { statuses } from "../../data/product-statuses.data"
+import { StatusMenuItem } from "../menu-items/status-menu-item.component"
+
 
 
 interface ProductFormProps {
@@ -25,12 +34,12 @@ export const ProductForm = ({
     const {data: brands, isSuccess: isSuccessBrands} = useGetBrandsQuery({})
     const {data: labels, isSuccess: isSuccessLabels} = useGetLabelsQuery(undefined)
 
+    const [changedCategory, setChangedCategory] = useState<CategoryModel | null>()
     const {open, close, status} = useModal()
 
     const {values, handleChange, handleSubmit, setFieldValue} = useFormik({
         initialValues: productFormInitData,
         onSubmit: (form) => {
-            
             onSubmit({...form, labelId: form.labelId && +form.labelId, brandId: form.brandId && +form.brandId})
         }
     })
@@ -47,6 +56,7 @@ export const ProductForm = ({
         close()
         category &&
         setFieldValue('categoryId', category.id)
+        setChangedCategory(category)
     }
 
     const handleChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
@@ -57,9 +67,12 @@ export const ProductForm = ({
 
     const handleDeleteProperty = (index: number) => {
         const filterCharacteristics = values.characteristics.filter((characteristic, i) => i !==index)
-        console.log(filterCharacteristics);
-        
         setFieldValue('characteristics', filterCharacteristics)
+    }
+
+    const handleSelect = (e: SelectChangeEvent<number | string | null>) => {
+        const value = e.target.value ? e.target.value : null
+        setFieldValue(e.target.name, value)
     }
 
     return (
@@ -68,69 +81,94 @@ export const ProductForm = ({
             className="flex flex-col gap-2"
             onSubmit={handleSubmit}
         >
-            <MainInput
+            <MUITextField
                 name='title'
-                title='Заголовок'
+                label='Заголовок'
                 value={values.title}
                 onChange= {handleChange}
             />
             
-            <MainInput
+            <MUITextField
                 name="name" 
-                title='Назва товару'
+                label='Назва товару'
                 value={values.name}
                 onChange= {handleChange}
             />
            
-            <MainInput
+            <MUITextField
                 name="model" 
-                title='Модель'
+                label='Модель'
                 value={values.model}
                 onChange= {handleChange}
             />
           
-            <MainInput 
-                type="text" 
+            <MUITextField 
                 name="discription" 
-                title="Опис"
+                label="Опис"
                 value={values.discription}
                 onChange= {handleChange}
             />
-            <MainInput 
-                type="number" 
+            <MUITextField 
                 name="price" 
-                title="Ціна"
+                label="Ціна"
                 value={values.price}
                 onChange= {handleChange}
             />
-            <select name="brandId" 
-                onChange={handleChange}
+
+            <Selector
+                id="brand"
+                name="brandId"
+                label="Бренд"
+                value={values.brandId ? values.brandId : ''}
+                onChange={handleSelect}
             >
                 {
                     isSuccessBrands && 
                     brands.map(brand => (
-                        <option key={brand.id} value={brand.id}>{brand.name}</option>
-                    ))
+                        <BrandMenuItem key={brand.id} brand={brand} value={brand.id}/>
+                     ))
                 }
-            </select>
-            
-            <select name="labelId" 
-                onChange={handleChange}
+            </Selector>
+
+            <Selector
+                id="label"
+                name="labelId"
+                label="Лейба"
+                value={values.labelId}
+                onChange={handleSelect}
             >
                 {
-                    isSuccessLabels && labels.map(label => (
-                        <option key={label.id} value={label.id}>{label.name}</option>
+                    isSuccessLabels && 
+                    labels.map(label => (
+                        <LabelMenuItem key={label.id} label={label} value={label.id}/>
                     ))
                 }
-            </select>
-            <select name="status" 
-                onChange={handleChange}
+            </Selector>
+            
+            <Selector
+                id="status"
+                name="status"
+                label="Cтатус продукту"
+                value={values.status}
+                onChange={handleSelect}
             >
-                <option value={'exist'}>в наявності</option>
-                <option value={'order'}>на замовлення</option>
-                <option value={'none'}>немає у наявності</option>
-            </select>
-                <button type="button" onClick={handleAddItem}>Додати властивість</button>
+                {
+                    statuses.map(status => (
+                        <StatusMenuItem key={status.systemName} status={status} value={status.systemName}/>
+                    ))
+                }
+            </Selector>
+
+            <Fieldset
+                defaultLegend="Оберіть категорію"
+                alternativeLegend="Обрана категорія"
+                defaultText="Категорія не обрана"
+                alternativeText={changedCategory?.name}
+                alterCondition={!!changedCategory}
+                onClick={open}
+            />
+            
+                
             {
                 values.characteristics.map((item, index) => (
                     <div className="relative flex gap-3">
@@ -163,15 +201,22 @@ export const ProductForm = ({
                     </div>    
                 ))
             }
-        <button type="button" onClick={open}>Обрати категорію</button>
+        
             <input type="file" multiple onChange={handleChangeFile}/>
-           
-            <button type="submit">Submit</button>
+            <button type="button" onClick={handleAddItem}>Додати властивість</button>
+            <Button 
+                variant="contained"
+                type="submit"
+            >
+                Відправити
+            </Button>
         </form>
         <ModalWindow
+                className="z-10"
                 open = {status}
                 onClickEmptySpace={close}
         >
+            
             <CategorySelector
                 onClick={handleChangeCategory}
             />

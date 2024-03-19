@@ -4,7 +4,6 @@ import { navigation } from "../data/navigation"
 import { categories } from "../data/categories"
 
 
-
  
 
 export const Footer = () => {

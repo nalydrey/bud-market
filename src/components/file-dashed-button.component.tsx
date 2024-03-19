@@ -25,7 +25,7 @@ export const FileDashedButton = ({
             />
             {
                 url ?
-                <div>
+                <div className="h-full">
                     <img src={url} alt="" className="w-full h-full object-cover" />
                 </div>
                 :

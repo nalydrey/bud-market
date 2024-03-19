@@ -1,4 +1,4 @@
-import { ProductCard } from "../../../components/cards/Card.component"
+import { ProductCard } from "../../../components/cards/product_card.component"
 import { useUser } from "../../../hooks/useUser"
 
 

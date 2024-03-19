@@ -28,6 +28,14 @@ const predefinedBreadcrumbs: BreadcrumbsDataModel[] = [
         name: 'панель адміністратора',
         path: '/admin'
     },
+    {
+        name: 'Мій кабінет',
+        path: '/user'
+    },
+    {
+        name: 'Лейби',
+        path: '/labels'
+    },
 ] 
 
 export const usePage = () => {
@@ -35,18 +43,13 @@ export const usePage = () => {
     const location = useLocation()
     const {categoryName} = useParams<{categoryName: string}>()
 
-    const {data: ancestors, isSuccess: isSuccessAncestors} = useGetAncestorsCategoriesQuery(categoryName || '')
+    const {data: ancestors} = useGetAncestorsCategoriesQuery(categoryName || '')
 
-    const {breadcrumbs, pageName} = useMemo(() => {
-        console.log('!!!!!!!!!!!!!!!!!!!!!');
-        console.log(ancestors);
-        
+    const {breadcrumbs, pageName, currentPath} = useMemo(() => {
         const breadcrumbs: BreadcrumbsDataModel[] = []
         const arr = location.pathname.split('/')
-        console.log(location.pathname);
         const set = new Set(arr)
-        console.log(set);
-        console.log(set.size);
+        
         if(set.size > 1){
             Array.from(set).forEach(item => {
                 const matchItem = predefinedBreadcrumbs.find(elem => elem.path === `/${item}`)
@@ -63,15 +66,14 @@ export const usePage = () => {
         }
         return {
             breadcrumbs, 
-            pageName: breadcrumbs.find((item, i) => i === breadcrumbs.length-1 )?.name
+            pageName: breadcrumbs.find((item, i) => i === breadcrumbs.length-1 )?.name,
+            currentPath: location.pathname
         }
     }, [location.pathname, ancestors])
     
-    console.log(breadcrumbs);
-    
-
     return {
         breadcrumbs,
-        pageName
+        pageName,
+        currentPath
     }
 } 

@@ -11,7 +11,6 @@ interface LoginFormProps {
 }
 
 export const LoginForm = ({
-    name,
     onSubmit
 }: LoginFormProps) => {
 

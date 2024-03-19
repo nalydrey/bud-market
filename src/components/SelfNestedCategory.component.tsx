@@ -22,7 +22,7 @@ export const SelfNestedCategory = ({
     return (
         <div className="border p-3 flex flex-col gap-2">
             <div className='max-w-[150px] self-center grow'>
-                <img src={photo ? 'http://localhost:3030/' + photo.fileName: defaultphoto} alt="" className="object-contain w-full h-full" />
+                <img src={photo ? photo.fileName : defaultphoto} alt="" className="object-contain w-full h-full" />
             </div>
             <h2 
                 className="text-xl font-bold "

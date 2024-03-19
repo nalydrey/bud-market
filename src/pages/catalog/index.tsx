@@ -1,6 +1,5 @@
 import { useParams, useNavigate, Outlet } from "react-router-dom"
-import { PageLabel } from "../../components/page-label.component"
-import { Breadcrumbs } from "@mui/material"
+
 import { useMemo } from "react"
 import { useGetAncestorsCategoriesQuery } from "../../api/categoryApi"
 

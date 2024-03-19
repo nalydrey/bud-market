@@ -1,38 +1,51 @@
-import { MouseEvent } from 'react'
 import { CardControl } from '../card-control.component'
+import { BrandModel } from '../../models/entities/brand.model'
 
 interface BrandCardProps {
-    src: string
-    onEdit?: (e: MouseEvent<HTMLButtonElement>) => void
-    onDelete?: (e: MouseEvent<HTMLButtonElement>) => void
+    brand: BrandModel
+    onEdit?: (brand: BrandModel) => void
+    onDelete?: (brand: BrandModel) => void
 }
 
 export const BrandCard = ({
-    src,
+    brand,
     onEdit,
     onDelete
 
 }: BrandCardProps) => {
 
-    console.log(src);
+    const {logoImg, name} = brand
     
+    const handleDelete = () => {
+        onDelete && onDelete(brand)
+    }
+
+    const handleEdit = () => {
+        onEdit && onEdit(brand)
+    }
 
     return (
         <div 
             className="relative  max-w-[230px] rounded-md min-h-[50px] shadow-md flex  justify-center items-center h-24 w-52"
         >
-            <div className='p-1  border  w-full h-full'>
-                <img 
-                    src={src} 
-                    alt="brand" 
-                    className='rounded-md object-contain w-full h-full overflow-hidden'
+            {
+                logoImg ?
+                <div className='p-1  border  w-full h-full'>
+                    <img 
+                        src={logoImg} 
+                        alt="brand" 
+                        className='rounded-md object-contain w-full h-full overflow-hidden'
 
-                />  
-            </div>
+                    />  
+                </div>
+                :
+                <span className='text-2xl font-bold'>{name}</span>
+            }
+            
             <CardControl
                 className="absolute right-0 top-0 -translate-y-1/2 translate-x-1/4"
-                onDelete={onDelete}
-                onEdit={onEdit}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
             />      
         </div>
     )

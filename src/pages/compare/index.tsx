@@ -23,15 +23,12 @@ export const ComparePage = () => {
 
     const {data: categories, isSuccess: isSuccessCategories} = useGetCategoriesQuery({page: 0, filter: {productIds: user?.compare.map(product => product.id)} ?? skipToken})
 
-    console.log(characteristics);
-    console.log('products', products);
     
     const handleClickButton = (category: CategoryModel) => {
         setCurrentCategory(category.systemName)
     }
 
     const handleClickClose = (product: ProductModel) => {
-        console.log(product.id, );
         
         if(user){
             changeCompare({productId: product.id, userId: user.id})

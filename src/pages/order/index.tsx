@@ -1,32 +1,46 @@
-import { useCreateOrderMutation } from "../../api/orderApi"
+import { useEffect, useMemo } from "react"
 import { UniButton } from "../../components/buttons/UniButton.component"
 import { OrderForm } from "../../components/forms/order-form.component"
 import { useBasket } from "../../hooks/useBasket"
-import { CreateOrderItemDto } from "../../models/dto/create-order-item.dto"
 import { OrderFormModel } from "../../models/forms/order-form.model"
+import { useNavigate } from "react-router-dom"
+import { useUser } from "../../hooks/useUser"
 
 
 
 export const OrderPage = () => {
 
-    const {totalPrice, itemQty, items} = useBasket()
-    const [createOrder] = useCreateOrderMutation()
+    const navigate = useNavigate()
+    const {totalPrice, itemQty, createOrder, order, isSuccess} = useBasket()
+    const {user} = useUser()
 
     const handleSubmit = (form: OrderFormModel) => {
-        const transformProducts: CreateOrderItemDto[] = form.goods.map(good => ({
-            productId: good.product.id,
-            qty: good.qty
-        }))
-        createOrder({...form, goods: transformProducts})
+        createOrder(form)
     }
+
+
+    useEffect(() => {
+        if(isSuccess){
+            navigate('/thank', {state: order})
+        }
+    }, [isSuccess])
     
+    
+    const formData: OrderFormModel | null = useMemo(() => {
+        return  user ? {
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            phone: user.phone
+        } : null
+    }, [user])
 
     return (
         <div className="container mx-auto ">
             <div className="flex my-5 gap-24">
                 <div className="grow">
                     <OrderForm
-                        goods={items}
+                        data={formData}
                         id = 'orderForm'
                         onSubmit={handleSubmit}
                     />
@@ -46,7 +60,7 @@ export const OrderPage = () => {
             </div>
             <UniButton
                 form="orderForm"
-                title="Далі"
+                title="Оформити"
             />
         </div>
     )

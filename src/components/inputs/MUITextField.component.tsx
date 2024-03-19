@@ -1,9 +1,9 @@
-import { TextField, TextFieldVariants } from "@mui/material"
-import { Variant } from "@mui/material/styles/createTypography"
-import { ChangeEvent } from "react"
+import { TextField } from "@mui/material"
+import { ChangeEvent, HTMLInputTypeAttribute } from "react"
 
 
 interface MUITextFieldProps {
+    type?: HTMLInputTypeAttribute 
     label?: string 
     name?: string
     value?: string | number
@@ -11,6 +11,7 @@ interface MUITextFieldProps {
 }
 
 export const MUITextField = ({
+    type,
     label,
     name,
     value,
@@ -19,6 +20,7 @@ export const MUITextField = ({
     return (
         <TextField
         fullWidth
+        type={type}
         variant="standard"
         autoComplete="off"
         name={name}

@@ -1,18 +1,18 @@
-import { useState } from "react"
+import { closeModal, openModal } from "../store/slices/modal.slice"
+import { useAppDispatch, useAppSelector } from "./hooks"
 
 export const useModalProvider = () => {
 
-    const [openedList, setOpenedList] = useState<string[]>([])
+    const {openedList} = useAppSelector(state => state.modalReducer)
+
+    const dispatch = useAppDispatch()
 
     const open = (name: string) => {
-        if(!openedList.includes(name))
-        setOpenedList([...openedList, name])
+        dispatch(openModal(name))
     }
 
     const close = (name: string) => {
-        setOpenedList(
-            openedList.filter(item => item !== name)
-        )
+        dispatch(closeModal(name))
     }
 
     return ({

@@ -1,13 +1,17 @@
 import { useDeleteLabelMutation, useGetLabelsQuery } from "../../../api/labelApi"
 import { CardControl } from "../../../components/card-control.component"
+import { useInfo } from "../../../hooks/useInfo"
 
 
 
 export const LabelsPage = () => {
 
     const {data: labels, isSuccess} = useGetLabelsQuery(undefined)
-    const [deleteLabel] = useDeleteLabelMutation()
+    const [deleteLabel, {isSuccess: isSuccessDelete, error: deleteError}] = useDeleteLabelMutation()
 
+    useInfo([
+        {isSuccess: isSuccessDelete, successMessage: 'Лейба видалена', error: deleteError}
+    ])
 
     const handleDeleteLabel = (id: number) => {
         deleteLabel(id)

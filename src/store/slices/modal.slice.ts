@@ -1,11 +1,11 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface ModalWindows {
-    open: string[]
+    openedList: string[]
 }
 
 const initialState: ModalWindows = {
-    open: []
+    openedList: []
 }
 
 
@@ -15,14 +15,14 @@ export const modalSlice = createSlice({
     reducers: {
 
         openModal: (state, action: PayloadAction<string>) => {
-            const set = new Set([...state.open, action.payload])
-            state.open = Array.from(set)
+            const set = new Set([...state.openedList, action.payload])
+            state.openedList = Array.from(set)
         },
 
         closeModal: (state, action: PayloadAction<string>) => {
-            const set = new Set(state.open)
+            const set = new Set(state.openedList)
             set.delete(action.payload)
-            state.open = Array.from(set)
+            state.openedList = Array.from(set)
         }
     }
 })

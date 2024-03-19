@@ -23,8 +23,6 @@ export const CategoryList = ({
     onMouseLeave
 }: CategoryListProps) => {
 
-    console.log(activeEl);
-
     const handleClick = (e: MouseEvent<HTMLButtonElement>, item: CategoryModel) => {
         onClick && onClick(e, item)
     }

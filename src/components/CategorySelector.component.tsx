@@ -26,19 +26,21 @@ export const CategorySelector = ({
 
 
     return (
-        <div>
-            {
-                isSuccess &&
-                categories.map(category => {
-                    return (
-                        <CategoryItem 
-                            changedElem={changedCategory?.id}
-                            category={category}
-                            onChange={handleChange}
-                        />
-                    )
-                })
-            }
+        <div className="bg-gray-400 p-5 rounded-lg">
+            <div className="grid grid-cols-4 gap-5">
+                {
+                    isSuccess &&
+                    categories.map(category => {
+                        return (
+                            <CategoryItem 
+                                changedElem={changedCategory?.id}
+                                category={category}
+                                onChange={handleChange}
+                            />
+                        )
+                    })
+                }
+            </div>
             <button 
                 className="text-white"
                 onClick={handleClick}

@@ -12,7 +12,6 @@ interface RegisteFormProps {
 
 
 export const RegisterForm = ({
-    name,
     onSubmit
 }: RegisteFormProps) => {
 

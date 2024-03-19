@@ -1,5 +1,7 @@
 import { OrderItem } from "./order-item.model"
 
+export type OrderStatus = 'new'| 'completed'| 'inProgress'| 'refused'| 'waited'
+
 export interface OrderModel {
     id: number
     firstName: string
@@ -9,4 +11,6 @@ export interface OrderModel {
     goods: OrderItem[]
     createdDate: Date
     updatedDate: Date
+    completeDate: Date | null
+    status: OrderStatus
 }

@@ -1,6 +1,6 @@
 import { PresentCard } from "../../components/cards/PresentCard.component"
 import { presentData } from "../../data/presentSectionData"
-import { CategoryPreview } from "../../components/Category-preview.component"
+import { CategoryPreview } from "../../components/logic-components/category-preview.component"
 import { Brand } from "../../components/cards/Brand.component" 
 import { RoundIconButton } from "../../components/buttons/RoundIconButton.component"
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline"
@@ -12,9 +12,6 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useGetBrandsQuery } from "../../api/brandApi"
 import { useGetCategoriesQuery } from "../../api/categoryApi"
-import { ProductModel } from "../../models/entities/product.model"
-import { useChangeFavoritesMutation } from "../../api/userApi"
-import { useUser } from "../../hooks/useUser"
 
 
 const gridStyles = [

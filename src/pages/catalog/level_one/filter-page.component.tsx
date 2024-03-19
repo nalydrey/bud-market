@@ -1,7 +1,7 @@
 import { FilterItem } from "../../../components/filter-item.component"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
-import { ProductCard } from "../../../components/cards/Card.component"
+import { ProductCard } from "../../../components/cards/product_card.component"
 import { transformStatus } from "../../../features/transform-status.func"
 import { BrandModel } from "../../../models/entities/brand.model"
 import { RangeSlider } from "../../../components/range-slider.component"
@@ -41,8 +41,6 @@ export const FilterPage = () => {
         set.has(brand.id) 
             ? set.delete(brand.id) 
             : set.add(brand.id)
-            console.log(set.has(brand.id));
-            console.log(set);
         setBrandList(Array.from(set))
     }
     
@@ -59,7 +57,6 @@ export const FilterPage = () => {
                 return characteristic[key] === field[1]
             })
         })
-        console.log('exist', isExist);
         if(!isExist) return setCharacteristics([...characteristics, characteristic])
 
         const filterArr = characteristics.filter(item => {
@@ -71,7 +68,6 @@ export const FilterPage = () => {
         setCharacteristics(filterArr)
       }
 
-console.log(characteristics);
 
       
     return (

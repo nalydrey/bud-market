@@ -10,7 +10,6 @@ interface CategoryCardProps {
 export const CategoryCard = ({
     title,
     imgSrc,
-    onClick
 }: CategoryCardProps) => {
     return (
         <div className="bg-gray-primary flex flex-col items-center rounded-md">

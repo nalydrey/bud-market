@@ -61,6 +61,7 @@ export const Header = ({
                 <LogoIcon
                     onClick={onClickLogo}
                 />
+                <div>{user?.firstName}</div>
                 <div>Робочий час: {companyInfo.workingTime[0]} - {companyInfo.workingTime[1]}</div>
                 <div className='flex flex-col gap-1 items-start'>
                     <span className='text-lg'>{companyInfo.contacts.phone}</span>

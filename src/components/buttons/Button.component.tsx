@@ -1,4 +1,3 @@
-import { Bars3Icon } from "@heroicons/react/20/solid"
 import { MouseEvent } from "react"
 
 interface ButtonProps {

@@ -1,19 +1,18 @@
 import { useFormik } from "formik"
-import { BasketItemModel } from "../../models/entities/basketItem.model"
 import { MUITextField } from "../inputs/MUITextField.component"
-import { useEffect } from "react"
 import { OrderFormModel } from "../../models/forms/order-form.model"
 import { orderFormInitData } from "../../data/initial-data/forms/order-form.init"
+import { useEffect } from "react"
 
 
 interface OrderFormProps {
-    goods: BasketItemModel[]
+    data: OrderFormModel | null
     id?: string
     onSubmit: (form: OrderFormModel) => void
 }
 
 export const OrderForm = ({
-    goods,
+    data,
     id,
     onSubmit
 }: OrderFormProps) => {
@@ -27,9 +26,12 @@ export const OrderForm = ({
     })
 
     useEffect(() => {
-        setValues({...values, goods})
-    }, [goods])
+        if(data){
+            setValues(data)
+        }
+    }, [data]) 
 
+   
     return (
         <form 
             className="grid grid-cols-2 gap-10"

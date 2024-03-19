@@ -18,7 +18,6 @@ export const ReviewForm = ({
     const {values, handleChange, setValues, handleSubmit} = useFormik({
         initialValues: reviewFormInitData,
         onSubmit: (form) => {
-            console.log(form);
             onSubmit && onSubmit(form)
         }
     })

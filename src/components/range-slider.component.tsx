@@ -21,8 +21,6 @@ export const RangeSlider = ({
         activeThumb: number,
       ) => {
 
-        console.log(newValue, activeThumb);
-        // const max = max
         if (!Array.isArray(newValue)) {
           return;
         }

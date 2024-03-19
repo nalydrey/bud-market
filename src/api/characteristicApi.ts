@@ -16,7 +16,6 @@ export const characteristicApiSlice = mainApi.injectEndpoints({
             providesTags: ['Characteristics'],
             query: (categorySystemName) => `/characteristics/group/${categorySystemName}`,
             transformResponse: (responce: CharacteristicGroupResponce) => {
-                console.log(responce);
                 const set = new Set(responce.characteristicGroups.map(item => item.name))
                 const uniqNames = Array.from(set)
                 

@@ -1,8 +1,9 @@
-import { enter, exit } from "../store/slices/user.slice"
+import { setToken } from "../store/slices/user.slice"
 import { useAppDispatch, useAppSelector } from "./hooks"
 import { useNavigate } from "react-router-dom"
-import { LoginFormModel } from "../components/forms/LoginForm.component"
-import { useLoginUserQuery } from "../api/userApi"
+import { useEnterByTokenQuery, useLoginUserMutation, userApiSlice } from "../api/userApi"
+import { LoginFormModel } from "../models/forms/login-form.model"
+import { useEffect } from "react"
 
 
 export const useUser = () => {
@@ -10,33 +11,56 @@ export const useUser = () => {
  
     const navigate = useNavigate()
 
-    const {accessData} = useAppSelector(state => state.userReducer)
-
-    const {data: user} = useLoginUserQuery(accessData)
-
+    const {token} = useAppSelector(state => state.userReducer)
     const dispatch = useAppDispatch()
+    
+
+    const [loginUser, {data: newToken }] = useLoginUserMutation()
+
+    const {data: user } = useEnterByTokenQuery(token)
+
+   useEffect(() => {
+    const localToken = localStorage.getItem('token')
+    if(localToken) dispatch(setToken(localToken))
+   }, [])
+  
+   useEffect(() => {
+    if(newToken){
+        dispatch(setToken(newToken))
+        localStorage.setItem('token', newToken)
+    }  
+   }, [newToken])
+
 
     const moveToOffice = () => {
         if(user){
             user.role === 'admin' && navigate('/admin')
+            user.role === 'user' && navigate('/user')
         }
     }
 
     const leaveApp = () => {
-        dispatch(exit())
+        localStorage.removeItem('token')
+        dispatch(setToken(null))
+        // dispatch(userApiSlice.internalActions.resetApiState())
     }
 
     const enterToApp = (form: LoginFormModel) => {
-        dispatch(enter(form))
+        loginUser(form)
     }
 
-    console.log(user);
-    
+    const forceUser = () => {
+        // refetch()
+        localStorage.removeItem('token')
+        dispatch(userApiSlice.internalActions.resetApiState())
+        dispatch(setToken(null))
+    }
 
     return {
         user,
         leaveApp,
         enterToApp,
-        moveToOffice
+        moveToOffice, 
+        forceUser
     }
 }

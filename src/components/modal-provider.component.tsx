@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { ModalWindow } from "./modal-window.component"
 import { FormContainer } from "./form-container.component"
-import { Alert, Snackbar } from "@mui/material"
 
 interface ModalProviderItem {
     name: string
@@ -48,9 +47,6 @@ export const ModalProvider = ({
     }, [openedList])
 
     
-    console.log(state);
-    
-    
 
     const handleClose = (name: string) => {
         onClose && onClose(name)
@@ -63,7 +59,6 @@ export const ModalProvider = ({
 
     return (
         <>
-            
              {
                 state.map((item) => {
                     return (
@@ -83,6 +78,5 @@ export const ModalProvider = ({
                 })
             }
         </>
-       
     )
 }
