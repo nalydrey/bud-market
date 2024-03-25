@@ -6,11 +6,10 @@ import { useState } from "react"
 import { ProductQueryBuilderDto } from "../../models/dto/queryBuilder-product.dto"
 import { useGetProductsQuery } from "../../api/productApi"
 import { ProductModel } from "../../models/entities/product.model"
-import { useNavigate } from "react-router-dom"
-import { useChangeCompareMutation, useChangeFavoritesMutation } from "../../api/userApi"
 import { useUser } from "../../hooks/useUser"
 import { useBasket } from "../../hooks/useBasket"
-import { useInfo } from "../../hooks/useInfo"
+import { useProduct } from "../../hooks/useProduct"
+import { ProductCardPreloader } from "../preloaders/product-card-preloader"
 
 interface CategoryPreviewProps {
     category: CategoryModel
@@ -20,30 +19,43 @@ export const CategoryPreview = ({
     category,
 }: CategoryPreviewProps) => {
 
-    const navigate = useNavigate()
-
-    const [currentId, setCurrentId] = useState<number | null>(null)
     const [query, setQuery] = useState<ProductQueryBuilderDto>({limit: 2, page: 0, filter: {category: {id: category.id}}})
 
-    const {data: products, isSuccess} = useGetProductsQuery(query)
-    const [changeFavorite, {isLoading, isSuccess: isSuccessFavorite, error: errorFavorite}] = useChangeFavoritesMutation()
-    const [changeCompare, {isLoading: isLoadingCompare}] = useChangeCompareMutation()
+    const {data, isSuccess, isLoading: isLoadingProduct, isFetching} = useGetProductsQuery(query)
+
 
     const {user} = useUser()
-    const {addToBasket, isLoading: isLoadingBasket, items} = useBasket()
 
-    useInfo([
-        {
-            isSuccess: isSuccessFavorite,
-            successMessage: 'Статус змінено',
-            error: errorFavorite
-        }
-    ])
+    const {
+        items,
+        isLoading: isLoadingBasket, 
+        addToBasket 
+    }
+    = useBasket()
+    
+    const { 
+        isLoading, 
+        activeProductId, 
+        setActiveProductId, 
+        changeCompareStatus, 
+        changeFavoriteStatus,
+        goToProductDetail
+    } 
+    = useProduct()
+
+    
+    const isFirst = query.page === 0
+    let isLast = false
+    if(data && query.limit){
+        isLast = Math.round(data.qty/query.limit) === query.page + 1
+    }
+
 
     
 
     const handleClickLeft = () => {
         const newPage = query.page - 1
+        if(newPage >=0)
         setQuery({...query, page: newPage })
     }
     
@@ -53,25 +65,20 @@ export const CategoryPreview = ({
     }
 
     const handleClickCard = (product: ProductModel) => {
-        navigate(`/product/${product.id}`)
-        setCurrentId(product.id)
+        goToProductDetail(product)
     }
-   
 
     const handleClickFavorite = (product: ProductModel) => {
-        user && changeFavorite({productId: product.id, userId: user.id})
-        setCurrentId(product.id)
+        changeFavoriteStatus(product)
     }
 
     const handleClickCompare = (product: ProductModel) => {
-        user && 
-        changeCompare({productId: product.id, userId: user.id})
-        setCurrentId(product.id)
+        changeCompareStatus(product)
     }
 
     const handleClickBasket = (product: ProductModel) => {
         addToBasket(product)
-        setCurrentId(product.id)
+        setActiveProductId(product.id)
     }
 
 
@@ -81,23 +88,31 @@ export const CategoryPreview = ({
                 <h3 className="text-3xl">{category.name}</h3>
                 <div className="flex gap-2">
                     <RoundIconButton
+                        disabled = {isFirst}
                         icon={<ChevronLeftIcon className="w-6 h-6"/>}
                         onClick={handleClickLeft}
                     />
                     <RoundIconButton
+                        disabled = {isLast}
                         icon={<ChevronRightIcon className="w-6 h-6"/>}
                         onClick={handleClickRight}
                     />
                 </div>
             </header>
             <div className="flex gap-5">
-                {
+                {   
+                    isLoadingProduct ?
+                    <>
+                        <ProductCardPreloader/> 
+                        <ProductCardPreloader/> 
+                    </>
+                    :
                     isSuccess &&
-                    products.map(product => (
+                    data.products.map(product => (
                         <ProductCard
                             key = {product.id}
                             product={product}
-                            isLoading = {(isLoading || isLoadingBasket || isLoadingCompare) && currentId === product.id}
+                            isLoading = {isFetching || (isLoading || isLoadingBasket) && activeProductId === product.id}
                             isInBasket = {items.some(item => item.product.id === product.id)}
                             isFavorite={!!user && user.favorite.some(item => item.id === product.id)}
                             isCompared={!!user && user.compare.some(item => item.id === product.id)}
@@ -109,7 +124,6 @@ export const CategoryPreview = ({
                         />
                     ))
                 }
-                
             </div>
         </div>
     )

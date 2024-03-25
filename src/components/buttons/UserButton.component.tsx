@@ -12,13 +12,16 @@ export const UserButton = ({
     countValue,
     onClick
 }: UserButtonProps) => {
+
     return (
         <button 
-            className="group bg-gray-medium p-8 duration-200 hover:bg-orange-secondary"
+            className="group bg-gray-medium p-5 duration-200 hover:bg-orange-secondary"
             onClick={onClick}
         >
             <div className="relative">
-                {icon}
+                <div className="w-8">
+                    {icon}
+                </div>
                 {!!countValue &&
                     <Counter 
                         value={countValue}

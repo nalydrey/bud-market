@@ -12,7 +12,8 @@ export const reviewApiSlice = mainApi.injectEndpoints({
                 body
             }),
             transformResponse: (responce: ReviewResponce) => responce.review
-        })
+        }),
+
     })
 })
 

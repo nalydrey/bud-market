@@ -10,6 +10,7 @@ export const RootCatalogPage = () => {
     const navigate = useNavigate()
     const {data: categories, isSuccess} = useGetTreeCategoriesQuery(undefined)
 
+
     const handleClick = (category: CategoryModel) => {
         navigate(category.systemName)
     }
@@ -22,6 +23,7 @@ export const RootCatalogPage = () => {
                 isSuccess &&
                 categories.map(category => (
                     <SelfNestedCategory
+                        key={category.id}
                         category={category}
                         onClick={handleClick}
                     />

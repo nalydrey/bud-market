@@ -22,11 +22,15 @@ import { UserOrderPage } from "../pages/user/orders";
 import { FavoritePage } from "../pages/favorites";
 import { TestPage } from "../pages/TestPage";
 import { ThankPage } from "../pages/thank";
+import { ErrorPage } from "../pages/error-page.component";
+import { TempPage } from "../pages/temp-page.component";
+import { SomethingWentWrongPage } from "../pages/something-went-wrong-page";
 
 export const router = createBrowserRouter([
     {
       path: "/",
       element: <IndexPage/>,
+      errorElement: <ErrorPage/>,
       children: [
         {
           index: true,
@@ -53,6 +57,30 @@ export const router = createBrowserRouter([
         {
           path: '/favorites',
           element: <FavoritePage/>
+        },
+        {
+          path: '/sww',
+          element: <SomethingWentWrongPage/>
+        },
+        {
+          path: '/about',
+          element: <TempPage/>
+        },
+        {
+          path: '/popular',
+          element: <TempPage/>
+        },
+        {
+          path: '/contacts',
+          element: <TempPage/>
+        },
+        {
+          path: '/new',
+          element: <TempPage/>
+        },
+        {
+          path: '/sale',
+          element: <TempPage/>
         },
         {
           path: '/admin',
@@ -117,7 +145,7 @@ export const router = createBrowserRouter([
         {
           path: '/product/:productId',
           element: <SingleProductPage/>
-        }
+        },
         // {
         //   path: '/catalog/:categoryName',
         //   element: <SelfCatalogPage/>

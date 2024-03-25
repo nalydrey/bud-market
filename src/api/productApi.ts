@@ -19,22 +19,31 @@ export const productApiSlice = mainApi.injectEndpoints({
             transformResponse: (responce: ProductsResponce) => responce.products
         }),
     
-        deleteProduct: builder.mutation<ProductModel, number>({
+        deleteProduct: builder.mutation<ProductModel, string >({
             invalidatesTags: ['Products'],
-            query: (id) => ({
-                url: `/products/${id}`,
-                method: 'DELETE'
-            }),
-            transformResponse: (responce: ProductResponce) => responce.product
+            queryFn: async (id) => {
+                if(id){
+                    const response = await fetch(`http://localhost:3030/api/products/${id}`, {
+                        method: 'GET',
+                    });
+                    const json = await response.json();
+                    return {
+                        data: json.product
+                    }
+                }
+                return {
+                    data: null
+                }
+            },
         }),
     
-        getProducts: builder.query<ProductModel[], ProductQueryBuilderDto>({
+        getProducts: builder.query<ProductsResponce, ProductQueryBuilderDto>({
             providesTags: ['Products'],
             query: (query) => {
                 const qs = queryString(query)
                 return `/products?${qs}`
             },
-            transformResponse: (responce: ProductsResponce) => responce.products
+            // transformResponse: (responce: ProductsResponce) => responce.products
         }),
       
         getProduct: builder.query<ProductModel, number | string>({

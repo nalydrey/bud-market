@@ -6,6 +6,7 @@ import { mainApi } from "./createApi";
 import { ChangeFavoriteDto } from "../models/dto/change-favorite.dto";
 import { ChangeCompareDto } from "../models/dto/change-compare.dto";
 import { LoginResponce } from "../models/response/login-responce.model";
+import { LoginDto } from "../models/dto/login.dto";
 
 export const userApiSlice = mainApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -47,13 +48,11 @@ export const userApiSlice = mainApi.injectEndpoints({
             providesTags: ['User'],
             queryFn: async (token) => {
                 if(token){
-                    
                     const response = await fetch('http://localhost:3030/api/users/enter', {
                         method: 'GET',
                         headers: {'authorization': `Bearer ${token}`}
                     });
                     const json = await response.json();
-                    
                     return {
                         data: json.user
                     }

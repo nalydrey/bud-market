@@ -4,6 +4,7 @@ import { SelfNestedCategory } from "../../../components/SelfNestedCategory.compo
 import { CategoryContainer } from "../../../components/containers/category-container.component"
 import { FilterPage } from "./filter-page.component"
 import { useGetDescendantsCategoriesQuery } from "../../../api/categoryApi"
+import { skipToken } from "@reduxjs/toolkit/query"
 
 
 
@@ -12,7 +13,7 @@ export const SelfCatalogPage = () => {
     const {categoryName} = useParams<{categoryName: string}>()
     const navigate = useNavigate()
 
-    const {data: category, isSuccess} = useGetDescendantsCategoriesQuery(categoryName || '')
+    const {data: category, isSuccess} = useGetDescendantsCategoriesQuery(categoryName ?? skipToken)
 
 
     const handleClick = (category: CategoryModel) => {
@@ -36,6 +37,7 @@ export const SelfCatalogPage = () => {
                 </CategoryContainer>
                 :
                 <FilterPage/>
+                // <div>1</div>
             }
         </>
     )

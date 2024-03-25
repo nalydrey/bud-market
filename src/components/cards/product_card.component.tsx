@@ -71,7 +71,7 @@ export const ProductCard = ({
                 />
             </div>
             {/*------------------- Slider -----------------------*/}
-            <div className='grow flex flex-col max-h-44'>
+            <div className='grow flex flex-col h-44'>
                 <div className='flex items-center justify-center mt-1 mb-3 max-w-[200px] overflow-hidden grow self-center'>
                     <img src={src[number]} alt="image" className='w-full h-full object-contain' />
                 </div>
@@ -137,7 +137,7 @@ export const ProductCard = ({
                     onEdit={() => {onEdit && onEdit(product)}}
                 />
             }
-            {isLoading && <div className='absolute bg-white/50 w-full h-full'/>}
+            {isLoading && <div className='absolute bg-white/80 w-full h-full'/>}
         </div>
     )
 }

@@ -2,7 +2,6 @@ import { FilterItem } from "../../../components/filter-item.component"
 import { useState } from "react"
 import { useParams } from "react-router-dom"
 import { ProductCard } from "../../../components/cards/product_card.component"
-import { transformStatus } from "../../../features/transform-status.func"
 import { BrandModel } from "../../../models/entities/brand.model"
 import { RangeSlider } from "../../../components/range-slider.component"
 import { useGetBrandsQuery } from "../../../api/brandApi"
@@ -10,6 +9,7 @@ import { useGetProductsQuery } from "../../../api/productApi"
 import { useGetCharacteristicsGroupQuery } from "../../../api/characteristicApi"
 import { FilterMenuItem } from "../../../components/filter-menu-item.component"
 import { QueryBuilderCharacteristic } from "../../../models/dto/queryBuilder-characteristic.model"
+import { useProduct } from "../../../hooks/useProduct"
 
 export const FilterPage = () => {
 
@@ -17,6 +17,8 @@ export const FilterPage = () => {
     const [brandIdList, setBrandList] = useState<number[]>([])
     const [finalRange, setFinalRange] = useState<[number, number]>([0, 10000])
     const [characteristics, setCharacteristics] = useState<QueryBuilderCharacteristic[]>([])
+
+    const {goToProductDetail} = useProduct()
 
     const {data:brands, isSuccess: isBrandsSuccess} = useGetBrandsQuery({filter:{products: {category: {systemName: params.categoryName}}}})
 
@@ -44,11 +46,6 @@ export const FilterPage = () => {
         setBrandList(Array.from(set))
     }
     
-
-      const handleMouseUp = (event: Event | React.SyntheticEvent<Element, Event>, value: number | number[]) => {
-        if(Array.isArray(value) && value.length === 2)
-        setFinalRange([value[0], value[1]])
-      }
 
       const handleClickCharacteristic = (characteristic: QueryBuilderCharacteristic) => {
         const isExist = characteristics.some(item => {
@@ -136,13 +133,11 @@ export const FilterPage = () => {
                     isSuccess &&
                     products.map(product => (
                         <ProductCard
-                            key={product.id}
-                            price={product.priceHistory[0].value}
-                            src={product.images.map(product => 'http://localhost:3030/' + product.fileName)}
-                            title={product.title}
-                            label={product.label && {color: product.label.color, title: product.label.name}}
-                            status={transformStatus(product.status)}
-                            oldPrice={product.priceHistory[1] && product.priceHistory[1].value}
+                           product={product}
+                        //    onCompare={}
+                        //    onBasket={}
+                        //    onFavorite={}
+                            onClickCard={goToProductDetail}
                         />
                     ))
                 }

@@ -1,9 +1,8 @@
-import { MouseEvent } from "react"
 import { CategoryModel } from "../models/entities/category.model"
 
 interface SubCategoryListProps {
     list: CategoryModel []
-    onClick?: (e: MouseEvent<HTMLButtonElement>, item: CategoryModel) => void
+    onClick?: (item: CategoryModel) => void
 }
 
 export const SubCategoryList = ({
@@ -11,8 +10,8 @@ export const SubCategoryList = ({
     onClick
 }: SubCategoryListProps) => {
 
-    const handleClick = (e: MouseEvent<HTMLButtonElement>, item: CategoryModel) => {
-        onClick && onClick(e, item)
+    const handleClick = (item: CategoryModel) => {
+        onClick && onClick(item)
     }
 
     return (
@@ -23,7 +22,7 @@ export const SubCategoryList = ({
                 <li >
                     <button 
                         className=" first-letter:capitalize hover:text-orange-primary"
-                        onClick={(e) => handleClick(e, item)}
+                        onClick={() => handleClick(item)}
                     >{item.name}</button>
                 </li>
             ))}

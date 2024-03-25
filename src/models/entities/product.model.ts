@@ -8,7 +8,7 @@ import { PriceModel } from "./price.model"
 export interface ProductModel {
     id: number
     brand: BrandModel
-    category:CategoryModel
+    category:CategoryModel 
     characteristics:CharacteristicModel[]
     createdDate:Date
     discription:string

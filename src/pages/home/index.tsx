@@ -12,6 +12,8 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useGetBrandsQuery } from "../../api/brandApi"
 import { useGetCategoriesQuery } from "../../api/categoryApi"
+import { CategoryPreviewPreloader } from "../../components/preloaders/category-preview-preloader"
+import { MoveToPage } from "../../components/logic-components/move-to-page"
 
 
 const gridStyles = [
@@ -21,7 +23,7 @@ const gridStyles = [
 
 export const HomePage = () => {
 
-    const {data: categories, isSuccess} = useGetCategoriesQuery({page: 0})
+    const {data: categories, isSuccess, isError, isLoading} = useGetCategoriesQuery({page: 0})
     
     
     const navigate = useNavigate()
@@ -65,14 +67,25 @@ export const HomePage = () => {
             </section>
             <section>
                 <div className="container mx-auto grid grid-cols-2 gap-y-32 gap-x-10 py-20">
-                    {
-                        isSuccess &&
+                    {   
+                        isLoading ?
+                        <>
+                           <CategoryPreviewPreloader/>
+                           <CategoryPreviewPreloader/>
+                           <CategoryPreviewPreloader/>
+                           <CategoryPreviewPreloader/>
+                        </>
+                        :
+                        isSuccess ?
                         categories.map(category => (
                             <CategoryPreview
                                 key = {category.id}
                                 category={category}
                             />
                         ))
+                        :
+                        isError &&
+                        <MoveToPage path="sww"/>
                     }
                    
                 </div>

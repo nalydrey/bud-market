@@ -10,7 +10,9 @@ import { useModalProvider } from "../../hooks/useModalProvider"
 import { useUser } from "../../hooks/useUser" 
 import { Breadcrumbs } from "@mui/material" 
 import { usePage } from "../../hooks/usePage" 
-import { PageLabel } from "../page-label.component" 
+import { PageLabel } from "../page-label.component"
+import { NavigationModel } from "../../models/navigation.model"
+import { CategoryModel } from "../../models/entities/category.model"
 
 
 interface LayoutProps {
@@ -26,14 +28,14 @@ export const Layout = ({
 
     const navigate = useNavigate()
 
-    const {breadcrumbs, pageName, currentPath} = usePage()
+    const {breadcrumbs, currentPath, currentName} = usePage()
     const {totalPrice, itemQty} = useBasket()
     const {user, moveToOffice, leaveApp} = useUser()
     const {open} = useModalProvider()
 
 
     const {data: categories, isSuccess} = useGetTreeCategoriesQuery(undefined)
-    const {data: products} = useGetProductsQuery({page: 0, filter: {like}})
+    const {data} = useGetProductsQuery({page: 0, filter: {like}})
 
    
 
@@ -45,7 +47,6 @@ export const Layout = ({
         setLike(str)
     }
 
-
     const handleMenuItem = (name: string) => {
         if(name === 'register' || name === 'login') open(name)
         if(name === 'office') moveToOffice()
@@ -55,6 +56,14 @@ export const Layout = ({
 
     const handleClickBreadcrumb = (path: string) => {
         navigate(path)
+    }
+
+    const handleClickLink = (link: NavigationModel) => {
+        navigate(link.path)
+    }
+
+    const handleClickCategory = (category: CategoryModel) => {
+        navigate(`/catalog/${category.systemName}`)
     }
 
 
@@ -74,11 +83,13 @@ export const Layout = ({
             
             <SubHeader
                 categories={isSuccess ? categories : []}
-                products={products || []}
+                products={data?.products || []}
                 onDebounce={handleDebounce}
+                onClickLink={handleClickLink}
+                onClickCategory={handleClickCategory}
             />
             {
-                currentPath !== '/' &&
+                currentPath !== '/' && currentPath !== '/sww' &&
                 <div className="container mx-auto flex flex-col gap-4 my-5">
                     <Breadcrumbs 
                         separator="/"
@@ -88,14 +99,14 @@ export const Layout = ({
                                 <button
                                     className=""
                                     onClick={() => handleClickBreadcrumb(breadcrumb.path)}
-                                >{breadcrumb.name}</button>
+                                >{breadcrumb.title}</button>
                             ))
                         }
                     </Breadcrumbs>
                     {
-                        pageName &&
+                        currentName &&
                         <PageLabel
-                            title={pageName}
+                            title={currentName}
                         />
                     }
                 </div>
@@ -103,7 +114,11 @@ export const Layout = ({
             <main className="grow">
                 {children}
             </main>
-            <Footer/>  
+            <Footer
+                categories={isSuccess ? categories : []}
+                onClickLink={handleClickLink}
+                onClickCategory={handleClickCategory}
+            />  
         </>
     )
 }

@@ -1,79 +1,118 @@
-import { useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useLocation, useParams } from "react-router-dom"
+import { BreadcrumbsDataModel } from "../models/breadcrumb.model"
 import { useGetAncestorsCategoriesQuery } from "../api/categoryApi"
+import { skipToken } from "@reduxjs/toolkit/query"
+import { useGetProductQuery } from "../api/productApi"
 
-interface BreadcrumbsDataModel {
-    name: string
-    path: string
-}
+
+
+
 
 const predefinedBreadcrumbs: BreadcrumbsDataModel[] = [
     {
-        name: 'головна',
-        path: '/'
+        title: 'головна',
+        name: '',
+        path: '/',
     },
     {
-        name: 'каталог',
-        path: '/catalog'
+        title: 'кошик',
+        name: 'basket',
+        path: '/basket',
     },
     {
-        name: 'кошик',
-        path: '/basket'
+        title: 'каталог',
+        name: 'catalog',
+        path: '/catalog',
     },
     {
-        name: 'порівняння',
-        path: '/compare'
+        title: 'контакти',
+        name: 'contacts',
+        path: '/contacts',
     },
     {
-        name: 'панель адміністратора',
-        path: '/admin'
+        title: 'про компанію',
+        name: 'about',
+        path: '/about',
     },
     {
-        name: 'Мій кабінет',
-        path: '/user'
+        title: 'розпродаж',
+        name: 'sale',
+        path: '/sale',
     },
     {
-        name: 'Лейби',
-        path: '/labels'
+        title: 'новинки',
+        name: 'new',
+        path: '/new',
     },
-] 
+    {
+        title: 'хіти продажу',
+        name: 'popular',
+        path: '/popular',
+    },
+]
+
+    
 
 export const usePage = () => {
+    
+    const [category, setCategory] = useState<string | null>(null)    
+    const [currentBreadcrumbs, setSurrentBreadcrumbs] = useState<BreadcrumbsDataModel[]>([])
 
-    const location = useLocation()
-    const {categoryName} = useParams<{categoryName: string}>()
+    const {pathname} = useLocation()
+    const {categoryName, productId} = useParams<{categoryName?: string, productId?: string}>()
+    
+    
 
-    const {data: ancestors} = useGetAncestorsCategoriesQuery(categoryName || '')
+    const {data: ancestors} = useGetAncestorsCategoriesQuery(category ?? skipToken)
+    const {data: product} = useGetProductQuery(productId || '')
+  
+console.log(product);
 
-    const {breadcrumbs, pageName, currentPath} = useMemo(() => {
-        const breadcrumbs: BreadcrumbsDataModel[] = []
-        const arr = location.pathname.split('/')
-        const set = new Set(arr)
-        
-        if(set.size > 1){
-            Array.from(set).forEach(item => {
-                const matchItem = predefinedBreadcrumbs.find(elem => elem.path === `/${item}`)
-                if(matchItem){
-                    breadcrumbs.push(matchItem)
-                }
+    useEffect(() => {
+        if(product) setCategory(product.category.systemName)
+        if(!product) setCategory(categoryName || null)
+    }, [product, categoryName])
+    
+
+    useEffect(() => {
+
+        const newBreadcrumbs: BreadcrumbsDataModel[] = []
+
+        const pathSet = new Set(pathname.split('/'))
+        pathSet.forEach(item => {
+            const singleBreadcrumb = predefinedBreadcrumbs.find(elem => elem.name === item)
+            if(singleBreadcrumb) newBreadcrumbs.push(singleBreadcrumb)
+        })
+
+       console.log(ancestors);
+       
+
+        category && ancestors && ancestors.forEach(elem => {
+
+            newBreadcrumbs.push({
+                name: elem.systemName,
+                path: `/catalog/${elem.systemName}`,
+                title: elem.name
             })
-    
-            const basePath = breadcrumbs.find((item, i) => (i === breadcrumbs.length - 1))?.path
-    
-            if(ancestors){
-                ancestors.forEach(item => breadcrumbs.push({name: item.name, path: basePath + '/' +item.systemName}))
-            }
-        }
-        return {
-            breadcrumbs, 
-            pageName: breadcrumbs.find((item, i) => i === breadcrumbs.length-1 )?.name,
-            currentPath: location.pathname
-        }
-    }, [location.pathname, ancestors])
-    
-    return {
-        breadcrumbs,
-        pageName,
-        currentPath
-    }
+        })
+console.log(product);
+
+        product && newBreadcrumbs.push({title: product.title, name:product.title, path: `/product/${product.id}`})
+        
+        setSurrentBreadcrumbs(newBreadcrumbs)
+     
+    }, [pathname, ancestors, product, category])
+   
+    const currentName: string = useMemo(() => {
+        const lastItem = currentBreadcrumbs.find((item, i) => i === currentBreadcrumbs.length-1 )
+        return lastItem?.title || ''
+    }, [currentBreadcrumbs])
+
+
+  return {
+    breadcrumbs: currentBreadcrumbs,
+    currentPath: pathname,
+    currentName
+  }
 } 

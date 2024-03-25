@@ -1,4 +1,3 @@
-import { ProductModel } from "../../models/entities/product.model"
 import { useBasket } from "../../hooks/useBasket"
 import { UniButton } from "../../components/buttons/UniButton.component"
 import { useNavigate } from "react-router-dom"
@@ -9,6 +8,7 @@ import { BasketItemModel } from "../../models/entities/basketItem.model"
 export const BasketPage = () => {
 
     const {items, changeQty, deleteFromBasket} = useBasket()
+
     const navigate = useNavigate()
 
 

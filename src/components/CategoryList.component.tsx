@@ -1,5 +1,4 @@
 import { ChevronRightIcon } from "@heroicons/react/20/solid"
-// import { categories } from "../data/categories"
 import { MouseEvent } from "react"
 import { SubCategoryList } from "./SubCategoryList"
 import { CategoryModel } from "../models/entities/category.model"
@@ -9,8 +8,8 @@ interface CategoryListProps {
     categories: CategoryModel[]
     activeEl: string
     sublist?: CategoryModel[]
-    onClick?: (e: MouseEvent<HTMLButtonElement>, item: CategoryModel) => void
-    onMouseEnter?: (e: MouseEvent<HTMLButtonElement>, name: CategoryModel) => void
+    onClick?: (item: CategoryModel) => void
+    onMouseEnter?: (name: CategoryModel) => void
     onMouseLeave?: (e: MouseEvent<HTMLDivElement>) => void
 }
 
@@ -23,8 +22,8 @@ export const CategoryList = ({
     onMouseLeave
 }: CategoryListProps) => {
 
-    const handleClick = (e: MouseEvent<HTMLButtonElement>, item: CategoryModel) => {
-        onClick && onClick(e, item)
+    const handleClick = (item: CategoryModel) => {
+        onClick && onClick(item)
     }
     
     return (
@@ -38,8 +37,8 @@ export const CategoryList = ({
                     <li >
                         <button 
                             className={`p-6 w-full flex items-center justify-between gap-10 duration-200 ${activeEl === category.systemName ? 'bg-black text-white':'bg-white'}`}
-                            onClick = {(e) => {handleClick(e, category)}}
-                            onMouseEnter={(e) => {onMouseEnter && onMouseEnter(e, category)}}
+                            onClick = {() => {handleClick(category)}}
+                            onMouseEnter={() => {onMouseEnter && onMouseEnter(category)}}
                         >
                             <span className="first-letter:capitalize">{category.name}</span>
                            {!!category.children.length && <ChevronRightIcon className="w-8"/>} 

@@ -13,6 +13,8 @@ export const IndexPage = () => {
     const {message, severity, status, closeInfo} = useInfo()
     const {pathname} = useLocation()
 
+   
+
     const handleCloseInfo = () => {
         closeInfo()
     }

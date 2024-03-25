@@ -9,17 +9,22 @@ import { CategoryModel } from "../models/entities/category.model"
 import { SearchProductPreview } from "../components/search-product-preview.component"
 import { useDebounceCallback } from "usehooks-ts"
 import { ProductModel } from "../models/entities/product.model"
+import { NavigationModel } from "../models/navigation.model"
 
 interface SubHeaderProps {
     categories: CategoryModel[]
     products: ProductModel[]
     onDebounce?: (str: string) => void
+    onClickLink?: (nav: NavigationModel) => void
+    onClickCategory?: (category: CategoryModel) => void
 }
 
 export const SubHeader = ({
     categories,
     products,
-    onDebounce
+    onDebounce,
+    onClickLink,
+    onClickCategory
 }: SubHeaderProps) => {
 
     const [isOpen, setOpen] = useState<boolean>(false)
@@ -45,7 +50,7 @@ export const SubHeader = ({
         setOpen(!isOpen)
     }
 
-    const handleClickCategoryItem = (e: MouseEvent<HTMLButtonElement>, item: CategoryModel) => {
+    const handleClickCategoryItem = (item: CategoryModel) => {
         setActiveElement(item.systemName)
         setSublist(item.children)
     }
@@ -60,6 +65,16 @@ export const SubHeader = ({
         debounced(e.target.value)
     }
 
+    const handleClickLink = (nav: NavigationModel) => {
+        onClickLink && onClickLink(nav)
+    }
+
+    const handleClickCategory = (category: CategoryModel) => {
+        console.log(category);
+        onClickCategory && onClickCategory(category)
+        setOpen(!isOpen)
+    }
+
     return (
         <header className=" bg-black text-white">
             <div className="relative py-5 container mx-auto flex items-center gap-10 justify-between">
@@ -71,7 +86,14 @@ export const SubHeader = ({
                 <nav className="grow">
                     <ul className="flex gap-5 justify-around">
                         {navigation.map(page => (
-                            <li className=" first-letter:capitalize">{page}</li>
+                            <li >
+                                <button
+                                    className=" first-letter:capitalize"
+                                    onClick={() => handleClickLink(page)}
+                                >
+                                    {page.title}
+                                </button>
+                            </li>
                         ))}
                     </ul>
                 </nav>
@@ -87,7 +109,7 @@ export const SubHeader = ({
                                 return (
                                     <SearchProductPreview
                                         title={title}
-                                        src={'http://localhost:3030/' + images[0].fileName}
+                                        src={images[0].fileName}
                                         price={priceHistory[0].value}
                                     />
                                 )
@@ -105,6 +127,7 @@ export const SubHeader = ({
                         sublist = {sublist}
                         onMouseEnter={handleClickCategoryItem}
                         onMouseLeave={handleMouseLeave}
+                        onClick={handleClickCategory}
                     />
                 }
             </div>

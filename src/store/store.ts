@@ -4,6 +4,7 @@ import basketReducer from './slices/basket.slice'
 import modalReducer from '../store/slices/modal.slice'
 import userReducer from '../store/slices/user.slice'
 import infoReducer from '../store/slices/info.slice'
+import breadcrumbReducer from '../store/slices/breadcrumb.slice'
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     basketReducer,
     modalReducer,
     userReducer,
+    breadcrumbReducer,
     [mainApi.reducerPath]: mainApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>

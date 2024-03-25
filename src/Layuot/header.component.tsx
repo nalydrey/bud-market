@@ -56,13 +56,12 @@ export const Header = ({
     }
 
     return (
-        <header className='bg-gray-dark font-raleway text-white'>
-            <div className='container mx-auto flex gap-5 items-center justify-between'>
+        <header className='bg-gray-dark font-raleway text-white '>
+            <div className='container mx-auto flex gap-5 items-center justify-between flex-wrap p-2'>
                 <LogoIcon
                     onClick={onClickLogo}
                 />
-                <div>{user?.firstName}</div>
-                <div>Робочий час: {companyInfo.workingTime[0]} - {companyInfo.workingTime[1]}</div>
+                <div className='flex flex-col'><span>Робочий час:</span><span>{companyInfo.workingTime[0]} - {companyInfo.workingTime[1]}</span> </div>
                 <div className='flex flex-col gap-1 items-start'>
                     <span className='text-lg'>{companyInfo.contacts.phone}</span>
                     <button 
@@ -110,7 +109,7 @@ export const Header = ({
                          }
                     </Menu>
                     <UserButton
-                       icon={<BasketIcon className="w-8 stroke-white"/>}
+                       icon={<BasketIcon className="stroke-white"/>}
                        countValue={basketCounter}
                        onClick={onClickBasket}
                     />
